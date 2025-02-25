@@ -1,6 +1,7 @@
 import React from "react";
 import PaymentButton from "@/components/PaymentButton";
 import PaymentModal from "@/components/PaymentModal";
+import { DigitalAssetWithToken } from "@metaplex-foundation/mpl-token-metadata";
 
 class PaymentGateWay {
   private apiKey: string;
@@ -73,7 +74,7 @@ class PaymentGateWay {
   }
 
   handleSubmitPaymentModal(data: {
-    fromToken: string;
+    fromToken: DigitalAssetWithToken;
     toToken: string;
     amount: number;
   }) {

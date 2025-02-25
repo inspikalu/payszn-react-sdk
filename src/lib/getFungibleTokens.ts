@@ -1,5 +1,10 @@
-import { Connection, PublicKey, GetProgramAccountsFilter } from "@solana/web3.js";
+import { Connection, PublicKey, GetProgramAccountsFilter, clusterApiUrl } from "@solana/web3.js";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import axios from "axios";
+import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
+import { fetchAllDigitalAssetWithTokenByOwner } from "@metaplex-foundation/mpl-token-metadata";
+import { publicKey } from "@metaplex-foundation/umi";
+
 
 type TokenAccount = {
     mint: string;
@@ -62,3 +67,48 @@ export async function getTokenAccounts(wallet: string, solanaConnection: Connect
         console.log(`--Token Balance: ${tokenBalance}`);
     });
 }
+
+export async function getTokenAccountsFromHelus(wallet: string) {
+    try {
+        const respose = await axios.get(`https://api.helius.com/v1/tokens/accounts?owner=${wallet}>`);
+        console.log(respose, "Respose from the endpoint");
+        return respose;
+    } catch (error) {
+
+    }
+}
+
+export async function getFungibleTokensForWallet(
+    walletAddress: string,
+    rpcEndpoint = clusterApiUrl("devnet")
+) {
+    try {
+        const umi = createUmi(rpcEndpoint);
+        const ownerPublicKey = publicKey(walletAddress);
+        console.log("Fetching Fungible Tokens....");
+        const allNFTs = await fetchAllDigitalAssetWithTokenByOwner(
+            umi,
+            ownerPublicKey
+        );
+        // const nfts: UserFTokens[] = [];
+        // allNFTs.forEach((nft) => {
+        //   nfts.push({
+        //     mintAddress: nft.publicKey,
+        //     name: nft.metadata.name,
+        //     symbol: nft.metadata.symbol,
+        //     uri: nft.metadata.uri,
+        //   });
+        // });
+
+        // const returnData = {
+        //   specificData: nfts,
+        //   fullData: allNFTs,
+        // };
+        // console.log("fts fetched successfully", returnData);
+        return allNFTs;
+    } catch (error) {
+        console.error("Error swapping tokens to NFT:", error);
+        throw new Error("Failed to swap tokens to NFT");
+    }
+}
+
