@@ -20,7 +20,7 @@ const Home = () => {
       });
 
       // Create payment intent once when component mounts
-      paymentGateWayRef.current.createPaymentIntent(100).catch((err) => {
+      paymentGateWayRef.current.createPaymentIntent(0.05).catch((err) => {
         console.error("Error creating payment intent:", err);
       });
     }

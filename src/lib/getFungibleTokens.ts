@@ -6,7 +6,7 @@ import { publicKey } from "@metaplex-foundation/umi";
 
 export async function getFungibleTokensForWallet(
     walletAddress: string,
-    rpcEndpoint = clusterApiUrl("mainnet-beta")
+    rpcEndpoint = "https://mainnet.helius-rpc.com/?api-key=8dabc2e1-a043-4c0a-a675-52273c7ac948"
 ) {
     try {
         const umi = createUmi(rpcEndpoint);

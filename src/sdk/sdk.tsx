@@ -34,7 +34,8 @@ class PaymentGateway {
   private readonly USDC_MINT_ADDRESS =
     "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
   private readonly JUPITER_API_BASE_URL = "https://api.jup.ag";
-  private readonly RPC_URL = "";
+  private readonly RPC_URL =
+    "https://mainnet.helius-rpc.com/?api-key=8dabc2e1-a043-4c0a-a675-52273c7ac948";
 
   constructor({ apiKey, setShowModal, setPaymentIntent }: PaymentGatewayProps) {
     this.apiKey = apiKey;
