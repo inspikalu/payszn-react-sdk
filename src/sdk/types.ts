@@ -1,4 +1,6 @@
 import { DigitalAssetWithToken } from "@metaplex-foundation/mpl-token-metadata";
+import { WalletContextState } from "@solana/wallet-adapter-react";
+import { VersionedTransaction } from "@solana/web3.js";
 
 // Define interfaces for better type safety
 export interface PaymentGatewayProps {
@@ -11,10 +13,26 @@ export interface PaymentIntent {
     id: string;
     amount: number;
 }
-
+export interface TokenInfo {
+    address: string;
+    name: string;
+    symbol: string;
+    decimals: number;
+    logoURI: string;
+    tags: string[];
+    daily_volume: number;
+    created_at: string;
+    freeze_authority: string | null;
+    mint_authority: string | null;
+    permanent_delegate: string | null;
+    minted_at: string | null;
+    extensions: {
+        coingeckoId: string;
+    };
+}
 export interface TokenCheckResult {
     success: boolean;
-    data?: unknown;
+    data?: TokenInfo;
     error?: string;
 }
 
@@ -28,19 +46,9 @@ export interface PaymentSubmissionData {
     fromToken: DigitalAssetWithToken;
     amount: number;
     walletAddress: string;
+    wallet: WalletContextState;
 }
 
-export interface SwapOptions {
-    dynamicComputeUnitLimit?: boolean;
-    dynamicSlippage?: boolean;
-    prioritizationFee?: {
-        priorityLevelWithMaxLamports: {
-            maxLamports: number;
-            priorityLevel: string;
-        };
-    };
-    apiKey?: string;
-}
 
 export interface ErrorResponse {
     message: string;
@@ -62,4 +70,32 @@ export interface SwapExecutionResponse {
     transactionId?: string;
     // Add more fields as needed
     [key: string]: unknown;
+}
+
+/**
+ * Options for swap operations
+ */
+export interface SwapOptions {
+    dynamicComputeUnitLimit: boolean;
+    dynamicSlippage: boolean;
+    prioritizationFee?: {
+        priorityLevelWithMaxLamports: {
+            maxLamports: number;
+            priorityLevel: string;
+        };
+    };
+}
+
+/**
+ * Configuration for the PaymentGateway
+ */
+export interface PaymentGatewayConfig {
+    apiKey: string;
+    defaultSlippageBps?: number;
+    feePercentage?: number;
+}
+
+
+export interface TransactionSigner {
+    signTransaction: (transaction: VersionedTransaction) => Promise<VersionedTransaction>;
 }

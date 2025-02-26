@@ -1,5 +1,6 @@
 "use client";
-import PaymentGateWay from "@/sdk/sdk";
+// import PaymentGateWay from "@/sdk/sdk";
+import PaymentGateWay from "@/sdk/PaymentGateway";
 import { PaymentIntent } from "@/sdk/types";
 import { useState, useEffect, useRef } from "react";
 

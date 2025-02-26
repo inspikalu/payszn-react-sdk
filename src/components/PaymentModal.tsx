@@ -10,12 +10,17 @@ import {
 } from "./ui/select";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { getFungibleTokensForWallet } from "@/lib/getFungibleTokens";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import {
+  useConnection,
+  useWallet,
+  WalletContextState,
+} from "@solana/wallet-adapter-react";
 import { DigitalAssetWithToken } from "@metaplex-foundation/mpl-token-metadata";
 
 interface PaymentModalProps {
   onSubmit: (data: {
     fromToken: DigitalAssetWithToken;
+    wallet: WalletContextState;
     walletAddress: string;
     amount: number;
   }) => void;
@@ -82,10 +87,10 @@ const PaymentModal = ({ onSubmit, amount }: PaymentModalProps) => {
   };
    */
 
-  const handleSubmit = (walletAddress: string) => {
+  const handleSubmit = (wallet: WalletContextState, walletAddress: string) => {
     const fromToken = getSelectedToken();
     if (!fromToken || !amount || !toToken) return;
-    onSubmit({ fromToken, walletAddress, amount });
+    onSubmit({ fromToken, walletAddress, wallet, amount });
   };
 
   return (
@@ -157,7 +162,9 @@ const PaymentModal = ({ onSubmit, amount }: PaymentModalProps) => {
               disabled={
                 !wallet.connected || !selectedTokenId || !amount || !toToken
               }
-              onClick={() => handleSubmit(wallet.publicKey?.toString() || "")}
+              onClick={() =>
+                handleSubmit(wallet, wallet.publicKey?.toString() || "")
+              }
             >
               Pay
             </Button>
