@@ -8,34 +8,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import {
-  WalletDisconnectButton,
-  WalletMultiButton,
-} from "@solana/wallet-adapter-react-ui";
-import {
-  getFungibleTokens,
-  getFungibleTokensForWallet,
-  getTokenAccounts,
-  getTokenAccountsFromHelus,
-} from "@/lib/getFungibleTokens";
-import { Connection, clusterApiUrl } from "@solana/web3.js";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { getFungibleTokensForWallet } from "@/lib/getFungibleTokens";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { connect } from "http2";
 import { DigitalAssetWithToken } from "@metaplex-foundation/mpl-token-metadata";
 
 interface PaymentModalProps {
   onSubmit: (data: {
     fromToken: DigitalAssetWithToken;
-    toToken: string;
+    walletAddress: string;
     amount: number;
   }) => void;
   amount: number;
+  onClose: () => void;
 }
 
 const PaymentModal = ({ onSubmit, amount }: PaymentModalProps) => {
   // Use publicKey as the unique identifier
   const [selectedTokenId, setSelectedTokenId] = useState<string>();
-  const [toToken, setToToken] = useState("USDC");
+  const [toToken] = useState("USDC");
   const [walletTokens, setWalletTokens] = useState<DigitalAssetWithToken[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { connection } = useConnection();
@@ -46,7 +37,6 @@ const PaymentModal = ({ onSubmit, amount }: PaymentModalProps) => {
       const fetchWalletTokens = async () => {
         setIsLoading(true);
         try {
-          console.log();
           const tokens = await getFungibleTokensForWallet(
             wallet.publicKey!.toString()
           );
@@ -76,6 +66,7 @@ const PaymentModal = ({ onSubmit, amount }: PaymentModalProps) => {
   };
 
   // Generate a display name for tokens that includes mint info for duplicates
+  /**
   const getTokenDisplayName = (token: DigitalAssetWithToken): string => {
     const symbol = token.metadata.symbol || "Unknown";
     const name = token.metadata.name || "Unknown Token";
@@ -89,11 +80,12 @@ const PaymentModal = ({ onSubmit, amount }: PaymentModalProps) => {
 
     return `${symbol} (${mintShort}) - ${balance}`;
   };
+   */
 
-  const handleSubmit = () => {
+  const handleSubmit = (walletAddress: string) => {
     const fromToken = getSelectedToken();
     if (!fromToken || !amount || !toToken) return;
-    onSubmit({ fromToken, toToken, amount });
+    onSubmit({ fromToken, walletAddress, amount });
   };
 
   return (
@@ -165,7 +157,7 @@ const PaymentModal = ({ onSubmit, amount }: PaymentModalProps) => {
               disabled={
                 !wallet.connected || !selectedTokenId || !amount || !toToken
               }
-              onClick={handleSubmit}
+              onClick={() => handleSubmit(wallet.publicKey?.toString() || "")}
             >
               Pay
             </Button>

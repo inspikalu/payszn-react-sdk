@@ -1,10 +1,11 @@
 "use client";
 import PaymentGateWay from "@/sdk/sdk";
+import { PaymentIntent } from "@/sdk/types";
 import { useState, useEffect, useRef } from "react";
 
 const Home = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [paymentIntent, setPaymentIntent] = useState(null);
+  const [, setShowModal] = useState(false);
+  const [, setPaymentIntent] = useState<PaymentIntent | null>(null);
 
   // Use useRef to maintain a single instance of PaymentGateWay
   const paymentGateWayRef = useRef<PaymentGateWay | null>(null);
@@ -12,11 +13,11 @@ const Home = () => {
   useEffect(() => {
     // Create the PaymentGateWay instance only once
     if (!paymentGateWayRef.current) {
-      paymentGateWayRef.current = new PaymentGateWay(
-        "YOUR API KEY HERE",
+      paymentGateWayRef.current = new PaymentGateWay({
+        apiKey: "YOUR API KEY HERE",
         setShowModal,
-        setPaymentIntent
-      );
+        setPaymentIntent: setPaymentIntent,
+      });
 
       // Create payment intent once when component mounts
       paymentGateWayRef.current.createPaymentIntent(100).catch((err) => {
