@@ -1,4 +1,5 @@
 import React from "react";
+import "./payment-button.css";
 interface SDKPaymentButtonProps {
     onClick: () => void;
     amount?: number;

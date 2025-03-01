@@ -14,7 +14,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "build:sdk": "tsc --skipLibCheck && babel dist --out-dir dist --extensions \".js,.jsx\" --copy-files"
+    "build:sdk": "tsc --skipLibCheck && babel dist --out-dir dist --extensions \".js,.jsx\" --copy-files && npm run copy-css",
+    "copy-css": "cpx \"src/**/*.css\" dist"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.30.1",
@@ -52,6 +53,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "browserify-zlib": "^0.2.0",
+    "cpx": "^1.5.0",
     "crypto-browserify": "^3.12.1",
     "eslint": "^9",
     "eslint-config-next": "15.1.7",

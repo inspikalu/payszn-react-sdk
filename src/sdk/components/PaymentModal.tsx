@@ -21,6 +21,7 @@ import { Loader2, InfoIcon } from "lucide-react";
 import { toast, Toaster } from "sonner";
 import JupiterService from "../services/JupiterService";
 import TokenService from "../services/TokenService";
+import "./payment-modal.css";
 
 interface PaymentModalProps {
   onSubmit: (data: {
@@ -149,25 +150,23 @@ const PaymentModal = ({ onSubmit, amount, onClose }: PaymentModalProps) => {
   };
 
   return (
-    <section className="bg-[#050510]/90 backdrop-blur-md min-h-screen flex items-center justify-center fixed w-full top-0 left-0 z-[500]">
-      <Card className="w-full max-w-md p-6 rounded-xl shadow-2xl border border-purple-500/20 bg-[#0a0a1a] text-white relative overflow-hidden">
+    <section className="modal-overlay">
+      <Card className="modal-card">
         {/* Gradient background effects */}
-        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl blur-xl opacity-20 -z-10"></div>
-        <div className="absolute top-0 left-0 w-40 h-40 bg-purple-500 rounded-full filter blur-3xl opacity-10"></div>
-        <div className="absolute bottom-0 right-0 w-40 h-40 bg-blue-500 rounded-full filter blur-3xl opacity-10"></div>
+        <div className="gradient-bg"></div>
+        <div className="purple-blob"></div>
+        <div className="blue-blob"></div>
 
-        <CardHeader className="px-0 pt-0">
-          <CardTitle className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-500">
-            Pay ${amount}
-          </CardTitle>
+        <CardHeader className="card-header">
+          <CardTitle className="card-title">Pay ${amount}</CardTitle>
         </CardHeader>
-        <CardContent className="px-0 pb-0">
-          <div className="grid grid-cols-[5fr_1fr] gap-3 items-top justify-start">
+        <CardContent className="card-content">
+          <div className="token-grid">
             <Select value={selectedTokenId} onValueChange={setSelectedTokenId}>
-              <SelectTrigger className="w-full border border-gray-800 text-white bg-[#111125] h-12 rounded-lg focus:ring-purple-500 focus:border-purple-500 ">
+              <SelectTrigger className="select-trigger">
                 <SelectValue placeholder="Select token">
                   {selectedTokenId && getSelectedToken() ? (
-                    <div className="flex items-center">
+                    <div className="token-display">
                       <span>{getSelectedToken()?.symbol}</span>
                     </div>
                   ) : (
@@ -175,67 +174,67 @@ const PaymentModal = ({ onSubmit, amount, onClose }: PaymentModalProps) => {
                   )}
                 </SelectValue>
               </SelectTrigger>
-              <SelectContent className="bg-[#111125] border border-gray-800 rounded-lg text-white">
+              <SelectContent className="select-content">
                 {isLoading ? (
-                  <div className="p-4 text-center">
-                    <Loader2 className="h-5 w-5 animate-spin text-purple-400 mx-auto mb-2" />
-                    <p className="text-sm text-gray-400">Loading tokens...</p>
+                  <div className="loading-container">
+                    <Loader2 className="loading-spinner" />
+                    <p className="loading-text">Loading tokens...</p>
                   </div>
                 ) : walletTokens.length === 0 ? (
-                  <p className="p-4 text-center text-gray-400">
-                    No tokens found
-                  </p>
+                  <p className="empty-message">No tokens found</p>
                 ) : (
                   walletTokens.map((token) => (
                     <SelectItem
                       key={token.mint}
                       value={token.mint}
-                      className="m-1 rounded hover:bg-[#1a1a30] focus:bg-[#1a1a30] focus:text-white"
+                      className="select-item"
                     >
-                      <div className="flex items-center justify-between w-full">
-                        <span className="font-medium">{token.symbol}</span>
+                      <div className="token-item">
+                        <span className="token-symbol">{token.symbol}</span>
                       </div>
                     </SelectItem>
                   ))
                 )}
               </SelectContent>
             </Select>
-            <div className="text-sm bg-[#111125] px-3 py-1 rounded-lg border border-gray-800 flex items-center justify-center h-12">
+            <div className="token-amount-display">
               {isCalculating ? (
-                <div className="flex items-center space-x-1">
-                  <Loader2 className="h-3 w-3 animate-spin text-purple-400" />
-                  <span className="text-gray-400">Calculating...</span>
+                <div className="flex-space">
+                  <Loader2 className="mini-spinner" />
+                  <span className="loading-text">Calculating...</span>
                 </div>
               ) : estimatedTokenAmount ? (
-                <div className="flex items-center space-x-1">
-                  <span className="text-blue-400">{estimatedTokenAmount}</span>
-                  <span className="text-gray-400">
+                <div className="flex-space">
+                  <span className="token-amount-text">
+                    {estimatedTokenAmount}
+                  </span>
+                  <span className="token-symbol-text">
                     {getSelectedToken()?.symbol || "tokens"}
                   </span>
                 </div>
               ) : (
-                <span className="text-gray-400">Select token</span>
+                <span className="token-symbol-text">Select token</span>
               )}
             </div>
           </div>
 
           {/* Additional Info Text */}
-          <div className="mt-3 flex items-start space-x-2 bg-[#111125]/50 p-2 rounded-lg border border-gray-800/50">
-            <InfoIcon className="h-4 w-4 text-blue-400 mt-0.5 flex-shrink-0" />
-            <p className="text-xs text-gray-400">
+          <div className="info-container">
+            <InfoIcon className="info-icon" />
+            <p className="info-text">
               The amount of tokens displayed are estimated and may vary slightly
               due to price fluctuations and slippage.
             </p>
           </div>
         </CardContent>
-        <footer className="mt-6">
+        <footer className="modal-footer">
           {!wallet.connected ? (
-            <div className="flex justify-center">
+            <div className="centered-wallet">
               <WalletMultiButton />
             </div>
           ) : (
             <Button
-              className="w-full rounded-lg h-12 bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-medium transition-all duration-200 border-0"
+              className="pay-button"
               disabled={
                 !wallet.connected ||
                 !selectedTokenId ||
@@ -248,8 +247,8 @@ const PaymentModal = ({ onSubmit, amount, onClose }: PaymentModalProps) => {
               }
             >
               {isSubmitting ? (
-                <div className="flex items-center justify-center">
-                  <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                <div className="button-content">
+                  <Loader2 className="loading-spinner" />
                   Processing...
                 </div>
               ) : (
@@ -257,14 +256,11 @@ const PaymentModal = ({ onSubmit, amount, onClose }: PaymentModalProps) => {
               )}
             </Button>
           )}
-          <div className="flex justify-between mt-4">
-            <button
-              onClick={onClose}
-              className="text-xs text-gray-400 hover:text-gray-300 transition-colors"
-            >
+          <div className="footer-actions">
+            <button onClick={onClose} className="cancel-button">
               Cancel
             </button>
-            <p className="text-xs text-gray-400">
+            <p className="fee-text">
               Transaction fee: 0.5% • Network fee: ~0.00005 SOL
             </p>
           </div>
@@ -274,13 +270,7 @@ const PaymentModal = ({ onSubmit, amount, onClose }: PaymentModalProps) => {
         position="top-right"
         toastOptions={{
           duration: 4000,
-          className: "bg-[#111125] text-white border border-purple-500/20",
-          style: {
-            borderRadius: "8px",
-            background: "#111125",
-            color: "white",
-            border: "1px solid rgba(139, 92, 246, 0.2)",
-          },
+          className: "toaster-style",
         }}
       />
     </section>
