@@ -2,7 +2,7 @@
 
 ## Overview
 
-PaySZN is a comprehensive SDK designed to handle cryptocurrency payment processing with Jupiter swap integration. It simplifies the process of integrating cryptocurrency payments into your application, providing a seamless experience for both developers and users.
+PaySZN is a comprehensive react/next.js SDK designed to handle cryptocurrency payment processing with Jupiter swap integration. It simplifies the process of integrating cryptocurrency payments into your application, providing a seamless experience for both developers and users.
 
 ## Features
 
