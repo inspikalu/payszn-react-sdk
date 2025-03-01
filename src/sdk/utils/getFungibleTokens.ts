@@ -3,7 +3,7 @@ import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { fetchAllDigitalAssetWithTokenByOwner } from "@metaplex-foundation/mpl-token-metadata";
 import { publicKey } from "@metaplex-foundation/umi";
 import { Connection, PublicKey } from "@solana/web3.js";
-import { FungibleToken } from "@/sdk/types";
+import { FungibleToken } from "../types";
 
 
 

@@ -1,4 +1,4 @@
-import { TokenCheckResult, SwapQuoteResult, JupiterQuoteResponse, SwapExecutionResponse, SwapOptions } from "@/sdk/types";
+import { TokenCheckResult, SwapQuoteResult, JupiterQuoteResponse, SwapExecutionResponse, SwapOptions } from "../types";
 /**
  * Service for Jupiter swap-related operations
  */

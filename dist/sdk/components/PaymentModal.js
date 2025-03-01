@@ -2,23 +2,6 @@
 "use client";
 
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = void 0;
-var _react = require("react");
-var _card = require("./ui/card");
-var _button = require("./ui/button");
-var _select = require("./ui/select");
-var _walletAdapterReactUi = require("@solana/wallet-adapter-react-ui");
-var _getFungibleTokens = require("@/sdk/utils/getFungibleTokens");
-var _walletAdapterReact = require("@solana/wallet-adapter-react");
-var _lucideReact = require("lucide-react");
-var _sonner = require("sonner");
-var _JupiterService = _interopRequireDefault(require("@/sdk/services/JupiterService"));
-var _TokenService = _interopRequireDefault(require("@/sdk/services/TokenService"));
-var _jsxRuntime = require("react/jsx-runtime");
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { "default": e }; }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -53,41 +36,61 @@ var __awaiter = void 0 && (void 0).__awaiter || function (thisArg, _arguments, P
     step((generator = generator.apply(thisArg, _arguments || [])).next());
   });
 };
+var __importDefault = void 0 && (void 0).__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var react_1 = __importDefault(require("react"));
+var react_2 = require("react");
+var card_1 = require("./ui/card");
+var button_1 = require("./ui/button");
+var select_1 = require("./ui/select");
+var wallet_adapter_react_ui_1 = require("@solana/wallet-adapter-react-ui");
+var getFungibleTokens_1 = require("../utils/getFungibleTokens");
+var wallet_adapter_react_1 = require("@solana/wallet-adapter-react");
+var lucide_react_1 = require("lucide-react");
+var sonner_1 = require("sonner");
+var JupiterService_1 = __importDefault(require("../services/JupiterService"));
+var TokenService_1 = __importDefault(require("../services/TokenService"));
 var PaymentModal = function PaymentModal(_ref) {
   var onSubmit = _ref.onSubmit,
     amount = _ref.amount,
     onClose = _ref.onClose;
   var _a, _b;
-  var _useState = (0, _react.useState)(),
-    _useState2 = _slicedToArray(_useState, 2),
-    selectedTokenId = _useState2[0],
-    setSelectedTokenId = _useState2[1];
-  var _useState3 = (0, _react.useState)("USDC"),
-    _useState4 = _slicedToArray(_useState3, 1),
-    toToken = _useState4[0];
-  var _useState5 = (0, _react.useState)([]),
-    _useState6 = _slicedToArray(_useState5, 2),
-    walletTokens = _useState6[0],
-    setWalletTokens = _useState6[1];
-  var _useState7 = (0, _react.useState)(false),
-    _useState8 = _slicedToArray(_useState7, 2),
-    isLoading = _useState8[0],
-    setIsLoading = _useState8[1];
-  var _useState9 = (0, _react.useState)(false),
-    _useState10 = _slicedToArray(_useState9, 2),
-    isSubmitting = _useState10[0],
-    setIsSubmitting = _useState10[1];
-  var _useState11 = (0, _react.useState)(null),
-    _useState12 = _slicedToArray(_useState11, 2),
-    estimatedTokenAmount = _useState12[0],
-    setEstimatedTokenAmount = _useState12[1];
-  var _useState13 = (0, _react.useState)(false),
-    _useState14 = _slicedToArray(_useState13, 2),
-    isCalculating = _useState14[0],
-    setIsCalculating = _useState14[1];
-  var wallet = (0, _walletAdapterReact.useWallet)();
+  var _ref2 = (0, react_2.useState)(),
+    _ref3 = _slicedToArray(_ref2, 2),
+    selectedTokenId = _ref3[0],
+    setSelectedTokenId = _ref3[1];
+  var _ref4 = (0, react_2.useState)("USDC"),
+    _ref5 = _slicedToArray(_ref4, 1),
+    toToken = _ref5[0];
+  var _ref6 = (0, react_2.useState)([]),
+    _ref7 = _slicedToArray(_ref6, 2),
+    walletTokens = _ref7[0],
+    setWalletTokens = _ref7[1];
+  var _ref8 = (0, react_2.useState)(false),
+    _ref9 = _slicedToArray(_ref8, 2),
+    isLoading = _ref9[0],
+    setIsLoading = _ref9[1];
+  var _ref10 = (0, react_2.useState)(false),
+    _ref11 = _slicedToArray(_ref10, 2),
+    isSubmitting = _ref11[0],
+    setIsSubmitting = _ref11[1];
+  var _ref12 = (0, react_2.useState)(null),
+    _ref13 = _slicedToArray(_ref12, 2),
+    estimatedTokenAmount = _ref13[0],
+    setEstimatedTokenAmount = _ref13[1];
+  var _ref14 = (0, react_2.useState)(false),
+    _ref15 = _slicedToArray(_ref14, 2),
+    isCalculating = _ref15[0],
+    setIsCalculating = _ref15[1];
+  var wallet = (0, wallet_adapter_react_1.useWallet)();
   // Fetch wallet tokens when connected
-  (0, _react.useEffect)(function () {
+  (0, react_2.useEffect)(function () {
     if (wallet.connected && wallet.publicKey) {
       var fetchWalletTokens = function fetchWalletTokens() {
         return __awaiter(void 0, void 0, void 0, /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
@@ -98,7 +101,7 @@ var PaymentModal = function PaymentModal(_ref) {
                 setIsLoading(true);
                 _context.prev = 1;
                 _context.next = 4;
-                return (0, _getFungibleTokens.getFungibleTokensForWalletV2)(wallet.publicKey.toString());
+                return (0, getFungibleTokens_1.getFungibleTokensForWalletV2)(wallet.publicKey.toString());
               case 4:
                 tokens = _context.sent;
                 console.log("These are the tokens, ", tokens);
@@ -106,9 +109,9 @@ var PaymentModal = function PaymentModal(_ref) {
                 // If there are tokens, set the first one as default
                 if (tokens.length > 0) {
                   setSelectedTokenId(tokens[0].mint);
-                  _sonner.toast.success("Wallet tokens loaded successfully");
+                  sonner_1.toast.success("Wallet tokens loaded successfully");
                 } else {
-                  _sonner.toast.warning("No tokens found in your wallet");
+                  sonner_1.toast.warning("No tokens found in your wallet");
                 }
                 _context.next = 14;
                 break;
@@ -116,7 +119,7 @@ var PaymentModal = function PaymentModal(_ref) {
                 _context.prev = 10;
                 _context.t0 = _context["catch"](1);
                 console.error("Error fetching wallet tokens:", _context.t0);
-                _sonner.toast.error("Failed to load wallet tokens");
+                sonner_1.toast.error("Failed to load wallet tokens");
               case 14:
                 _context.prev = 14;
                 setIsLoading(false);
@@ -132,7 +135,7 @@ var PaymentModal = function PaymentModal(_ref) {
     }
   }, [wallet.connected, wallet.publicKey]);
   // Calculate estimated token amount when token selection changes
-  (0, _react.useEffect)(function () {
+  (0, react_2.useEffect)(function () {
     var calculateRequiredAmount = function calculateRequiredAmount() {
       return __awaiter(void 0, void 0, void 0, /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
         var tokenPrice, requiredAmount;
@@ -149,11 +152,11 @@ var PaymentModal = function PaymentModal(_ref) {
               setIsCalculating(true);
               _context2.prev = 4;
               _context2.next = 7;
-              return _JupiterService["default"].getTokenPriceInUSDC(selectedTokenId);
+              return JupiterService_1["default"].getTokenPriceInUSDC(selectedTokenId);
             case 7:
               tokenPrice = _context2.sent;
               // Use TokenService for calculation
-              requiredAmount = _TokenService["default"].calculateRequiredTokenAmount(amount, tokenPrice); // Format to 6 decimal places for display
+              requiredAmount = TokenService_1["default"].calculateRequiredTokenAmount(amount, tokenPrice); // Format to 6 decimal places for display
               setEstimatedTokenAmount(parseFloat(requiredAmount.toFixed(6)));
               _context2.next = 17;
               break;
@@ -162,7 +165,7 @@ var PaymentModal = function PaymentModal(_ref) {
               _context2.t0 = _context2["catch"](4);
               console.error("Error calculating token amount:", _context2.t0);
               setEstimatedTokenAmount(null);
-              _sonner.toast.error("Failed to calculate token amount");
+              sonner_1.toast.error("Failed to calculate token amount");
             case 17:
               _context2.prev = 17;
               setIsCalculating(false);
@@ -194,12 +197,12 @@ var PaymentModal = function PaymentModal(_ref) {
               _context3.next = 4;
               break;
             }
-            _sonner.toast.error("Please select a token and enter an amount");
+            sonner_1.toast.error("Please select a token and enter an amount");
             return _context3.abrupt("return");
           case 4:
             setIsSubmitting(true);
             // Show a loading toast that we'll update with the result
-            toastId = _sonner.toast.loading("Processing your payment...");
+            toastId = sonner_1.toast.loading("Processing your payment...");
             _context3.prev = 6;
             _context3.next = 9;
             return onSubmit({
@@ -209,7 +212,7 @@ var PaymentModal = function PaymentModal(_ref) {
               amount: amount
             });
           case 9:
-            _sonner.toast.success("Payment completed successfully!", {
+            sonner_1.toast.success("Payment completed successfully!", {
               id: toastId
             });
             _context3.next = 16;
@@ -218,7 +221,7 @@ var PaymentModal = function PaymentModal(_ref) {
             _context3.prev = 12;
             _context3.t0 = _context3["catch"](6);
             console.error("Payment submission error:", _context3.t0);
-            _sonner.toast.error("Payment failed: ".concat(_context3.t0 instanceof Error ? _context3.t0.message : "Unknown error"), {
+            sonner_1.toast.error("Payment failed: ".concat(_context3.t0 instanceof Error ? _context3.t0.message : "Unknown error"), {
               id: toastId
             });
           case 16:
@@ -232,143 +235,109 @@ var PaymentModal = function PaymentModal(_ref) {
       }, _callee3, null, [[6, 12, 16, 19]]);
     }));
   };
-  return /*#__PURE__*/(0, _jsxRuntime.jsxs)("section", {
-    className: "bg-[#050510]/90 backdrop-blur-md min-h-screen flex items-center justify-center fixed w-full top-0 left-0",
-    children: [/*#__PURE__*/(0, _jsxRuntime.jsxs)(_card.Card, {
-      className: "w-full max-w-md p-6 rounded-xl shadow-2xl border border-purple-500/20 bg-[#0a0a1a] text-white relative overflow-hidden",
-      children: [/*#__PURE__*/(0, _jsxRuntime.jsx)("div", {
-        className: "absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl blur-xl opacity-20 -z-10"
-      }), /*#__PURE__*/(0, _jsxRuntime.jsx)("div", {
-        className: "absolute top-0 left-0 w-40 h-40 bg-purple-500 rounded-full filter blur-3xl opacity-10"
-      }), /*#__PURE__*/(0, _jsxRuntime.jsx)("div", {
-        className: "absolute bottom-0 right-0 w-40 h-40 bg-blue-500 rounded-full filter blur-3xl opacity-10"
-      }), /*#__PURE__*/(0, _jsxRuntime.jsx)(_card.CardHeader, {
-        className: "px-0 pt-0",
-        children: /*#__PURE__*/(0, _jsxRuntime.jsxs)(_card.CardTitle, {
-          className: "text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-500",
-          children: ["Pay $", amount]
-        })
-      }), /*#__PURE__*/(0, _jsxRuntime.jsxs)(_card.CardContent, {
-        className: "px-0 pb-0",
-        children: [/*#__PURE__*/(0, _jsxRuntime.jsxs)("div", {
-          className: "grid grid-cols-[5fr_1fr] gap-3 items-top justify-start",
-          children: [/*#__PURE__*/(0, _jsxRuntime.jsxs)(_select.Select, {
-            value: selectedTokenId,
-            onValueChange: setSelectedTokenId,
-            children: [/*#__PURE__*/(0, _jsxRuntime.jsx)(_select.SelectTrigger, {
-              className: "w-full border border-gray-800 text-white bg-[#111125] h-12 rounded-lg focus:ring-purple-500 focus:border-purple-500 ",
-              children: /*#__PURE__*/(0, _jsxRuntime.jsx)(_select.SelectValue, {
-                placeholder: "Select token",
-                children: selectedTokenId && getSelectedToken() ? /*#__PURE__*/(0, _jsxRuntime.jsx)("div", {
-                  className: "flex items-center",
-                  children: /*#__PURE__*/(0, _jsxRuntime.jsx)("span", {
-                    children: (_a = getSelectedToken()) === null || _a === void 0 ? void 0 : _a.symbol
-                  })
-                }) : "Select token"
-              })
-            }), /*#__PURE__*/(0, _jsxRuntime.jsx)(_select.SelectContent, {
-              className: "bg-[#111125] border border-gray-800 rounded-lg text-white",
-              children: isLoading ? /*#__PURE__*/(0, _jsxRuntime.jsxs)("div", {
-                className: "p-4 text-center",
-                children: [/*#__PURE__*/(0, _jsxRuntime.jsx)(_lucideReact.Loader2, {
-                  className: "h-5 w-5 animate-spin text-purple-400 mx-auto mb-2"
-                }), /*#__PURE__*/(0, _jsxRuntime.jsx)("p", {
-                  className: "text-sm text-gray-400",
-                  children: "Loading tokens..."
-                })]
-              }) : walletTokens.length === 0 ? /*#__PURE__*/(0, _jsxRuntime.jsx)("p", {
-                className: "p-4 text-center text-gray-400",
-                children: "No tokens found"
-              }) : walletTokens.map(function (token) {
-                return /*#__PURE__*/(0, _jsxRuntime.jsx)(_select.SelectItem, {
-                  value: token.mint,
-                  className: "m-1 rounded hover:bg-[#1a1a30] focus:bg-[#1a1a30] focus:text-white",
-                  children: /*#__PURE__*/(0, _jsxRuntime.jsx)("div", {
-                    className: "flex items-center justify-between w-full",
-                    children: /*#__PURE__*/(0, _jsxRuntime.jsx)("span", {
-                      className: "font-medium",
-                      children: token.symbol
-                    })
-                  })
-                }, token.mint);
-              })
-            })]
-          }), /*#__PURE__*/(0, _jsxRuntime.jsx)("div", {
-            className: "text-sm bg-[#111125] px-3 py-1 rounded-lg border border-gray-800 flex items-center justify-center h-12",
-            children: isCalculating ? /*#__PURE__*/(0, _jsxRuntime.jsxs)("div", {
-              className: "flex items-center space-x-1",
-              children: [/*#__PURE__*/(0, _jsxRuntime.jsx)(_lucideReact.Loader2, {
-                className: "h-3 w-3 animate-spin text-purple-400"
-              }), /*#__PURE__*/(0, _jsxRuntime.jsx)("span", {
-                className: "text-gray-400",
-                children: "Calculating..."
-              })]
-            }) : estimatedTokenAmount ? /*#__PURE__*/(0, _jsxRuntime.jsxs)("div", {
-              className: "flex items-center space-x-1",
-              children: [/*#__PURE__*/(0, _jsxRuntime.jsx)("span", {
-                className: "text-blue-400",
-                children: estimatedTokenAmount
-              }), /*#__PURE__*/(0, _jsxRuntime.jsx)("span", {
-                className: "text-gray-400",
-                children: ((_b = getSelectedToken()) === null || _b === void 0 ? void 0 : _b.symbol) || "tokens"
-              })]
-            }) : /*#__PURE__*/(0, _jsxRuntime.jsx)("span", {
-              className: "text-gray-400",
-              children: "Select token"
-            })
-          })]
-        }), /*#__PURE__*/(0, _jsxRuntime.jsxs)("div", {
-          className: "mt-3 flex items-start space-x-2 bg-[#111125]/50 p-2 rounded-lg border border-gray-800/50",
-          children: [/*#__PURE__*/(0, _jsxRuntime.jsx)(_lucideReact.InfoIcon, {
-            className: "h-4 w-4 text-blue-400 mt-0.5 flex-shrink-0"
-          }), /*#__PURE__*/(0, _jsxRuntime.jsx)("p", {
-            className: "text-xs text-gray-400",
-            children: "The amount of tokens displayed are estimated and may vary slightly due to price fluctuations and slippage."
-          })]
-        })]
-      }), /*#__PURE__*/(0, _jsxRuntime.jsxs)("footer", {
-        className: "mt-6",
-        children: [!wallet.connected ? /*#__PURE__*/(0, _jsxRuntime.jsx)("div", {
-          className: "flex justify-center",
-          children: /*#__PURE__*/(0, _jsxRuntime.jsx)(_walletAdapterReactUi.WalletMultiButton, {})
-        }) : /*#__PURE__*/(0, _jsxRuntime.jsx)(_button.Button, {
-          className: "w-full rounded-lg h-12 bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-medium transition-all duration-200 border-0",
-          disabled: !wallet.connected || !selectedTokenId || !amount || !toToken || isSubmitting,
-          onClick: function onClick() {
-            var _a;
-            return handleSubmit(wallet, ((_a = wallet.publicKey) === null || _a === void 0 ? void 0 : _a.toString()) || "");
-          },
-          children: isSubmitting ? /*#__PURE__*/(0, _jsxRuntime.jsxs)("div", {
-            className: "flex items-center justify-center",
-            children: [/*#__PURE__*/(0, _jsxRuntime.jsx)(_lucideReact.Loader2, {
-              className: "h-5 w-5 animate-spin mr-2"
-            }), "Processing..."]
-          }) : "Pay"
-        }), /*#__PURE__*/(0, _jsxRuntime.jsxs)("div", {
-          className: "flex justify-between mt-4",
-          children: [/*#__PURE__*/(0, _jsxRuntime.jsx)("button", {
-            onClick: onClose,
-            className: "text-xs text-gray-400 hover:text-gray-300 transition-colors",
-            children: "Cancel"
-          }), /*#__PURE__*/(0, _jsxRuntime.jsx)("p", {
-            className: "text-xs text-gray-400",
-            children: "Transaction fee: 0.5% \u2022 Network fee: ~0.00005 SOL"
-          })]
-        })]
-      })]
-    }), /*#__PURE__*/(0, _jsxRuntime.jsx)(_sonner.Toaster, {
-      position: "top-right",
-      toastOptions: {
-        duration: 4000,
-        className: "bg-[#111125] text-white border border-purple-500/20",
-        style: {
-          borderRadius: "8px",
-          background: "#111125",
-          color: "white",
-          border: "1px solid rgba(139, 92, 246, 0.2)"
-        }
+  return react_1["default"].createElement("section", {
+    className: "bg-[#050510]/90 backdrop-blur-md min-h-screen flex items-center justify-center fixed w-full top-0 left-0"
+  }, react_1["default"].createElement(card_1.Card, {
+    className: "w-full max-w-md p-6 rounded-xl shadow-2xl border border-purple-500/20 bg-[#0a0a1a] text-white relative overflow-hidden"
+  }, react_1["default"].createElement("div", {
+    className: "absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl blur-xl opacity-20 -z-10"
+  }), react_1["default"].createElement("div", {
+    className: "absolute top-0 left-0 w-40 h-40 bg-purple-500 rounded-full filter blur-3xl opacity-10"
+  }), react_1["default"].createElement("div", {
+    className: "absolute bottom-0 right-0 w-40 h-40 bg-blue-500 rounded-full filter blur-3xl opacity-10"
+  }), react_1["default"].createElement(card_1.CardHeader, {
+    className: "px-0 pt-0"
+  }, react_1["default"].createElement(card_1.CardTitle, {
+    className: "text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-500"
+  }, "Pay $", amount)), react_1["default"].createElement(card_1.CardContent, {
+    className: "px-0 pb-0"
+  }, react_1["default"].createElement("div", {
+    className: "grid grid-cols-[5fr_1fr] gap-3 items-top justify-start"
+  }, react_1["default"].createElement(select_1.Select, {
+    value: selectedTokenId,
+    onValueChange: setSelectedTokenId
+  }, react_1["default"].createElement(select_1.SelectTrigger, {
+    className: "w-full border border-gray-800 text-white bg-[#111125] h-12 rounded-lg focus:ring-purple-500 focus:border-purple-500 "
+  }, react_1["default"].createElement(select_1.SelectValue, {
+    placeholder: "Select token"
+  }, selectedTokenId && getSelectedToken() ? react_1["default"].createElement("div", {
+    className: "flex items-center"
+  }, react_1["default"].createElement("span", null, (_a = getSelectedToken()) === null || _a === void 0 ? void 0 : _a.symbol)) : "Select token")), react_1["default"].createElement(select_1.SelectContent, {
+    className: "bg-[#111125] border border-gray-800 rounded-lg text-white"
+  }, isLoading ? react_1["default"].createElement("div", {
+    className: "p-4 text-center"
+  }, react_1["default"].createElement(lucide_react_1.Loader2, {
+    className: "h-5 w-5 animate-spin text-purple-400 mx-auto mb-2"
+  }), react_1["default"].createElement("p", {
+    className: "text-sm text-gray-400"
+  }, "Loading tokens...")) : walletTokens.length === 0 ? react_1["default"].createElement("p", {
+    className: "p-4 text-center text-gray-400"
+  }, "No tokens found") : walletTokens.map(function (token) {
+    return react_1["default"].createElement(select_1.SelectItem, {
+      key: token.mint,
+      value: token.mint,
+      className: "m-1 rounded hover:bg-[#1a1a30] focus:bg-[#1a1a30] focus:text-white"
+    }, react_1["default"].createElement("div", {
+      className: "flex items-center justify-between w-full"
+    }, react_1["default"].createElement("span", {
+      className: "font-medium"
+    }, token.symbol)));
+  }))), react_1["default"].createElement("div", {
+    className: "text-sm bg-[#111125] px-3 py-1 rounded-lg border border-gray-800 flex items-center justify-center h-12"
+  }, isCalculating ? react_1["default"].createElement("div", {
+    className: "flex items-center space-x-1"
+  }, react_1["default"].createElement(lucide_react_1.Loader2, {
+    className: "h-3 w-3 animate-spin text-purple-400"
+  }), react_1["default"].createElement("span", {
+    className: "text-gray-400"
+  }, "Calculating...")) : estimatedTokenAmount ? react_1["default"].createElement("div", {
+    className: "flex items-center space-x-1"
+  }, react_1["default"].createElement("span", {
+    className: "text-blue-400"
+  }, estimatedTokenAmount), react_1["default"].createElement("span", {
+    className: "text-gray-400"
+  }, ((_b = getSelectedToken()) === null || _b === void 0 ? void 0 : _b.symbol) || "tokens")) : react_1["default"].createElement("span", {
+    className: "text-gray-400"
+  }, "Select token"))), react_1["default"].createElement("div", {
+    className: "mt-3 flex items-start space-x-2 bg-[#111125]/50 p-2 rounded-lg border border-gray-800/50"
+  }, react_1["default"].createElement(lucide_react_1.InfoIcon, {
+    className: "h-4 w-4 text-blue-400 mt-0.5 flex-shrink-0"
+  }), react_1["default"].createElement("p", {
+    className: "text-xs text-gray-400"
+  }, "The amount of tokens displayed are estimated and may vary slightly due to price fluctuations and slippage."))), react_1["default"].createElement("footer", {
+    className: "mt-6"
+  }, !wallet.connected ? react_1["default"].createElement("div", {
+    className: "flex justify-center"
+  }, react_1["default"].createElement(wallet_adapter_react_ui_1.WalletMultiButton, null)) : react_1["default"].createElement(button_1.Button, {
+    className: "w-full rounded-lg h-12 bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-medium transition-all duration-200 border-0",
+    disabled: !wallet.connected || !selectedTokenId || !amount || !toToken || isSubmitting,
+    onClick: function onClick() {
+      var _a;
+      return handleSubmit(wallet, ((_a = wallet.publicKey) === null || _a === void 0 ? void 0 : _a.toString()) || "");
+    }
+  }, isSubmitting ? react_1["default"].createElement("div", {
+    className: "flex items-center justify-center"
+  }, react_1["default"].createElement(lucide_react_1.Loader2, {
+    className: "h-5 w-5 animate-spin mr-2"
+  }), "Processing...") : "Pay"), react_1["default"].createElement("div", {
+    className: "flex justify-between mt-4"
+  }, react_1["default"].createElement("button", {
+    onClick: onClose,
+    className: "text-xs text-gray-400 hover:text-gray-300 transition-colors"
+  }, "Cancel"), react_1["default"].createElement("p", {
+    className: "text-xs text-gray-400"
+  }, "Transaction fee: 0.5% \u2022 Network fee: ~0.00005 SOL")))), react_1["default"].createElement(sonner_1.Toaster, {
+    position: "top-right",
+    toastOptions: {
+      duration: 4000,
+      className: "bg-[#111125] text-white border border-purple-500/20",
+      style: {
+        borderRadius: "8px",
+        background: "#111125",
+        color: "white",
+        border: "1px solid rgba(139, 92, 246, 0.2)"
       }
-    })]
-  });
+    }
+  }));
 };
-var _default = exports["default"] = PaymentModal;
+exports["default"] = PaymentModal;

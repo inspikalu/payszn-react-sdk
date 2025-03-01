@@ -5,7 +5,7 @@ import {
     JupiterQuoteResponse,
     SwapExecutionResponse,
     SwapOptions
-} from "@/sdk/types";
+} from "../types";
 import {
     JUPITER_API_BASE_URL,
     USDC_MINT_ADDRESS,

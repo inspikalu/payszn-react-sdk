@@ -1,5 +1,5 @@
 import React from "react";
-import { PaySZNProps, PaymentIntent, PaymentSubmissionData } from "@/sdk/types";
+import { PaySZNProps, PaymentIntent, PaymentSubmissionData } from "./types";
 /**
  * PaySZN handles cryptocurrency payment processing with Jupiter swap integration
  */

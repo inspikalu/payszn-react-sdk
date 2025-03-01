@@ -1,13 +1,13 @@
 import React from "react";
-import SDKPaymentButton from "@/sdk/components/SDKPaymentButton";
-import PaymentModal from "@/sdk/components/PaymentModal";
+import SDKPaymentButton from "./components/SDKPaymentButton";
+import PaymentModal from "./components/PaymentModal";
 import {
   PaySZNProps,
   PaymentIntent,
   PaymentSubmissionData,
   JupiterQuoteResponse,
   TransactionSigner,
-} from "@/sdk/types";
+} from "./types";
 import TokenService from "./services/TokenService";
 import JupiterService from "./services/JupiterService";
 import TransactionService from "./services/TransactionService";
@@ -97,7 +97,9 @@ class PaySZN {
    * @returns React component for the payment button
    */
   public renderPaymentButton(): React.ReactElement {
-    return <SDKPaymentButton onClick={this.handlePaymentButtonClick.bind(this)} />;
+    return (
+      <SDKPaymentButton onClick={this.handlePaymentButtonClick.bind(this)} />
+    );
   }
 
   /**

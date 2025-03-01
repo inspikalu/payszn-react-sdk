@@ -11,16 +11,16 @@ import {
   SelectValue,
 } from "./ui/select";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import { getFungibleTokensForWalletV2 } from "@/sdk/utils/getFungibleTokens";
+import { getFungibleTokensForWalletV2 } from "../utils/getFungibleTokens";
 import {
   useWallet,
   type WalletContextState,
 } from "@solana/wallet-adapter-react";
-import type { FungibleToken } from "@/sdk/types";
+import type { FungibleToken } from "../types";
 import { Loader2, InfoIcon } from "lucide-react";
 import { toast, Toaster } from "sonner";
-import JupiterService from "@/sdk/services/JupiterService";
-import TokenService from "@/sdk/services/TokenService";
+import JupiterService from "../services/JupiterService";
+import TokenService from "../services/TokenService";
 
 interface PaymentModalProps {
   onSubmit: (data: {
@@ -87,10 +87,15 @@ const PaymentModal = ({ onSubmit, amount, onClose }: PaymentModalProps) => {
       setIsCalculating(true);
       try {
         // Use the actual JupiterService implementation
-        const tokenPrice = await JupiterService.getTokenPriceInUSDC(selectedTokenId);
-        
+        const tokenPrice = await JupiterService.getTokenPriceInUSDC(
+          selectedTokenId
+        );
+
         // Use TokenService for calculation
-        const requiredAmount = TokenService.calculateRequiredTokenAmount(amount, tokenPrice);
+        const requiredAmount = TokenService.calculateRequiredTokenAmount(
+          amount,
+          tokenPrice
+        );
 
         // Format to 6 decimal places for display
         setEstimatedTokenAmount(parseFloat(requiredAmount.toFixed(6)));

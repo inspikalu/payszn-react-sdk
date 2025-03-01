@@ -1,6 +1,6 @@
 import React from "react";
 import { type WalletContextState } from "@solana/wallet-adapter-react";
-import type { FungibleToken } from "@/sdk/types";
+import type { FungibleToken } from "../types";
 interface PaymentModalProps {
     onSubmit: (data: {
         fromToken: FungibleToken;
