@@ -149,7 +149,7 @@ const PaymentModal = ({ onSubmit, amount, onClose }: PaymentModalProps) => {
   };
 
   return (
-    <section className="bg-[#050510]/90 backdrop-blur-md min-h-screen flex items-center justify-center fixed w-full top-0 left-0">
+    <section className="bg-[#050510]/90 backdrop-blur-md min-h-screen flex items-center justify-center fixed w-full top-0 left-0 z-[500]">
       <Card className="w-full max-w-md p-6 rounded-xl shadow-2xl border border-purple-500/20 bg-[#0a0a1a] text-white relative overflow-hidden">
         {/* Gradient background effects */}
         <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl blur-xl opacity-20 -z-10"></div>

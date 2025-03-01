@@ -236,7 +236,7 @@ var PaymentModal = function PaymentModal(_ref) {
     }));
   };
   return react_1["default"].createElement("section", {
-    className: "bg-[#050510]/90 backdrop-blur-md min-h-screen flex items-center justify-center fixed w-full top-0 left-0"
+    className: "bg-[#050510]/90 backdrop-blur-md min-h-screen flex items-center justify-center fixed w-full top-0 left-0 z-[500]"
   }, react_1["default"].createElement(card_1.Card, {
     className: "w-full max-w-md p-6 rounded-xl shadow-2xl border border-purple-500/20 bg-[#0a0a1a] text-white relative overflow-hidden"
   }, react_1["default"].createElement("div", {
