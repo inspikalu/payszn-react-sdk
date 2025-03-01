@@ -6,7 +6,8 @@
   "types": "types/sdk/index.d.ts",
   "files": [
     "dist/**/*",
-    "types/**/*"
+    "types/**/*",
+    "styles.css"
   ],
   "scripts": {
     "dev": "next dev --turbopack",
