@@ -3,13 +3,6 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { getFungibleTokensForWalletV2 } from "../utils/getFungibleTokens";
 import {
@@ -149,6 +142,11 @@ const PaymentModal = ({ onSubmit, amount, onClose }: PaymentModalProps) => {
     }
   };
 
+  // Handle change for the native select element
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedTokenId(e.target.value);
+  };
+
   return (
     <section className="modal-overlay">
       <Card className="modal-card">
@@ -162,41 +160,31 @@ const PaymentModal = ({ onSubmit, amount, onClose }: PaymentModalProps) => {
         </CardHeader>
         <CardContent className="card-content">
           <div className="token-grid">
-            <Select value={selectedTokenId} onValueChange={setSelectedTokenId}>
-              <SelectTrigger className="select-trigger">
-                <SelectValue placeholder="Select token">
-                  {selectedTokenId && getSelectedToken() ? (
-                    <div className="token-display">
-                      <span>{getSelectedToken()?.symbol}</span>
-                    </div>
+            <div className="select-container">
+              {isLoading ? (
+                <div className="loading-container">
+                  <Loader2 className="loading-spinner" />
+                  <p className="loading-text">Loading tokens...</p>
+                </div>
+              ) : (
+                <select 
+                  className="html-select" 
+                  value={selectedTokenId} 
+                  onChange={handleSelectChange}
+                >
+                  <option value="" disabled>Select token</option>
+                  {walletTokens.length === 0 ? (
+                    <option value="" disabled>No tokens found</option>
                   ) : (
-                    "Select token"
+                    walletTokens.map((token) => (
+                      <option key={token.mint} value={token.mint}>
+                        {token.symbol}
+                      </option>
+                    ))
                   )}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent className="select-content">
-                {isLoading ? (
-                  <div className="loading-container">
-                    <Loader2 className="loading-spinner" />
-                    <p className="loading-text">Loading tokens...</p>
-                  </div>
-                ) : walletTokens.length === 0 ? (
-                  <p className="empty-message">No tokens found</p>
-                ) : (
-                  walletTokens.map((token) => (
-                    <SelectItem
-                      key={token.mint}
-                      value={token.mint}
-                      className="select-item"
-                    >
-                      <div className="token-item">
-                        <span className="token-symbol">{token.symbol}</span>
-                      </div>
-                    </SelectItem>
-                  ))
-                )}
-              </SelectContent>
-            </Select>
+                </select>
+              )}
+            </div>
             <div className="token-amount-display">
               {isCalculating ? (
                 <div className="flex-space">
