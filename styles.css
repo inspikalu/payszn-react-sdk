@@ -1,0 +1,4 @@
+/* For critical styles you can't afford to have overridden */
+.payszn-sdk-root .payszn-sdk-button {
+    @apply payszn-sdk-bg-gradient-to-r payszn-sdk-from-purple-600 payszn-sdk-to-blue-500 !important;
+  }

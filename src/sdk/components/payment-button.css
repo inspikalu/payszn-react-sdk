@@ -1,0 +1,51 @@
+/* payment-button.css */
+.sdk-payment-button {
+    width: 100%;
+    border-radius: 0.5rem;
+    height: 3rem;
+    background: linear-gradient(to right, #9333ea, #3b82f6);
+    color: white;
+    font-weight: 500;
+    transition: all 200ms;
+    border: 0;
+  }
+  
+  .sdk-payment-button:hover {
+    background: linear-gradient(to right, #7e22ce, #2563eb);
+  }
+  
+  .sdk-payment-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .sdk-loading-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .sdk-spinner {
+    animation: spin 1s linear infinite;
+    margin-right: 0.5rem;
+    height: 1.25rem;
+    width: 1.25rem;
+    color: white;
+  }
+  
+  .sdk-opacity-25 {
+    opacity: 0.25;
+  }
+  
+  .sdk-opacity-75 {
+    opacity: 0.75;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
