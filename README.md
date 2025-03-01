@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PaySZN SDK Documentation
 
-## Getting Started
+## Overview
 
-First, run the development server:
+PaySZN is a comprehensive SDK designed to handle cryptocurrency payment processing with Jupiter swap integration. It simplifies the process of integrating cryptocurrency payments into your application, providing a seamless experience for both developers and users.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Features
+
+- **Cryptocurrency Payment Processing**: Easily handle payments in various cryptocurrencies.
+- **Jupiter Swap Integration**: Leverage Jupiter's swap functionality for efficient token exchanges.
+- **User-Friendly Components**: Pre-built React components for quick integration.
+
+## Installation
+
+To install the PaySZN SDK, run the following command:
+
+```terminal
+npm install payszn-sdk
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Usage
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Importing the SDK Components
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+To use the PaySZN SDK in your frontend application, import the necessary components:
 
-## Learn More
+```tsx
+import { PaySZNProvider, PaymentButton, PaymentModalWrapper } from "payszn-sdk";
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Example Implementation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Below is an example of how to implement the PaySZN SDK in a frontend application:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```tsx
+import { PaySZNProvider, PaymentButton, PaymentModalWrapper } from "payszn-sdk";
 
-## Deploy on Vercel
+const Home = () => {
+  return (
+    <PaySZNProvider apiKey="Your_api_Key" initialAmount={0.01}>
+      <div className="flex h-screen items-center justify-center">
+        <div className="w-40">
+          <PaymentButton />
+        </div>
+        <PaymentModalWrapper />
+      </div>
+    </PaySZNProvider>
+  );
+};
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+export default Home;
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+##
+
+`PaySZNProvider`
+
+The `PaySZNProvider` component is the main provider for the PaySZN SDK. It initializes the SDK with the provided API key and initial payment amount.
+
+**Props:**
+
+- apiKey (string): Your API key for the PaySZN SDK.
+- initialAmount (number): The initial payment amount in USDC.
+
+`PaymentButton`
+
+The `PaymentButton` component renders a button that, when clicked, opens the payment modal.
+
+`PaymentModalWrapper`
+
+The `PaymentModalWrapper` component renders the payment modal, which handles the entire payment process.
+
+## API Reference
+
+### PaySZNProvider
+
+```
+<PaySZNProvider apiKey="Your_api_Key" initialAmount={0.01}>
+  {/* Your components */}
+</PaySZNProvider>
+```
+
+### PaymentButton
+
+```
+<PaymentButton />
+```
+
+### PaymentModalWrapper
+
+```
+<PaymentModalWrapper />
+```
+
+## Contributing
+
+We welcome contributions to the PaySZN SDK. If you have any suggestions or improvements, please open an issue or submit a pull request on our GitHub repository.
+
+## License
+This project is licensed under the MIT License. See the LICENSE file for more details.
+
+## Support
+If you have any questions or need support, please contact our support team at `inspikalu@gmail.com`.

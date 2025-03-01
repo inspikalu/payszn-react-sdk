@@ -3,7 +3,7 @@ import { WalletContextState } from "@solana/wallet-adapter-react";
 import { VersionedTransaction } from "@solana/web3.js";
 
 // Define interfaces for better type safety
-export interface PaymentGatewayProps {
+export interface PaySZNProps {
     apiKey: string;
     setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
     setPaymentIntent: React.Dispatch<React.SetStateAction<PaymentIntent | null>>;
@@ -43,7 +43,7 @@ export interface SwapQuoteResult {
 }
 
 export interface PaymentSubmissionData {
-    fromToken: DigitalAssetWithToken;
+    fromToken: FungibleToken;
     amount: number;
     walletAddress: string;
     wallet: WalletContextState;
@@ -98,4 +98,10 @@ export interface PaymentGatewayConfig {
 
 export interface TransactionSigner {
     signTransaction: (transaction: VersionedTransaction) => Promise<VersionedTransaction>;
+}
+export interface FungibleToken {
+    mint: string;
+    amount: bigint;
+    decimals?: number;
+    symbol?: string;
 }

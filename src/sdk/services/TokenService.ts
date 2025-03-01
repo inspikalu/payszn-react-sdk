@@ -1,6 +1,15 @@
-import { PublicKey } from "@solana/web3.js";
-import { getAssociatedTokenAddress } from "@solana/spl-token";
-import { USDC_MINT_ADDRESS } from "./constants";
+import { RPC_URL, USDC_MINT_ADDRESS } from "./constants";
+import { Commitment, Connection, PublicKey, Transaction } from '@solana/web3.js';
+import {
+    getAssociatedTokenAddress,
+    getAccount,
+    createAssociatedTokenAccountInstruction,
+    TokenAccountNotFoundError,
+    TokenInvalidAccountOwnerError,
+    Account,
+    TOKEN_PROGRAM_ID,
+    ASSOCIATED_TOKEN_PROGRAM_ID
+} from '@solana/spl-token';
 
 /**
  * Service for token-related operations
@@ -35,6 +44,62 @@ class TokenService {
      */
     public async getUSDCATA(ownerAddress: string): Promise<string> {
         return this.getAssociatedTokenAddress(USDC_MINT_ADDRESS, ownerAddress);
+    }
+
+    /**
+     * Gets or creates an associated token account with automatic connection setup
+     * 
+     * @param {Object} params - The parameters for the function
+     * @param {PublicKey} params.ownerAddress - The owner of the token account
+     * @param {PublicKey} params.payer - The public key of the payer (usually wallet.publicKey)
+     * @param {Function} params.sendTransaction - The function to send a transaction
+     * @param {boolean} [params.allowOwnerOffCurve=false] - Whether to allow the owner to be off curve
+     * @param {string} [params.commitment='confirmed'] - The commitment level
+     * @returns {Promise<Account>} - The token account
+     */
+    public async getOrCreateUSDCAssociatedTokenAccount({
+        ownerAddress,
+        payer,
+        sendTransaction,
+    }: {
+        ownerAddress: PublicKey;
+        payer: PublicKey;
+        sendTransaction: (transaction: Transaction, options?: {}) => Promise<string>;
+        allowOwnerOffCurve?: boolean;
+    }): Promise<Account> {
+        // Setup connection based on network parameter
+        const connection = new Connection(RPC_URL);
+
+        const associatedToken = await getAssociatedTokenAddress(
+            new PublicKey(USDC_MINT_ADDRESS),
+            ownerAddress,
+        );
+
+        let account: Account;
+        try {
+            account = await getAccount(connection, associatedToken);
+        } catch (error: unknown) {
+            if (error instanceof TokenAccountNotFoundError || error instanceof TokenInvalidAccountOwnerError) {
+                try {
+                    const transaction = new Transaction().add(
+                        createAssociatedTokenAccountInstruction(
+                            payer,
+                            associatedToken,
+                            ownerAddress,
+                            new PublicKey(USDC_MINT_ADDRESS),
+                        )
+                    );
+
+                    await sendTransaction(transaction);
+                    account = await getAccount(connection, associatedToken);
+                } catch (error: unknown) {
+                    throw new Error(`Failed to create associated token account: ${error}`);
+                }
+            } else {
+                throw error;
+            }
+        }
+        return account;
     }
 
     /**
