@@ -1,12 +1,18 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.API_BASE_URL = exports.DEFAULT_SWAP_OPTIONS = exports.DEFAULT_SLIPPAGE_BPS = exports.USDC_MINT_ADDRESS = exports.RPC_URL = exports.JUPITER_API_BASE_URL = void 0;
 /**
  * API endpoints and configuration constants
  */
-export const JUPITER_API_BASE_URL = "https://api.jup.ag";
-export const RPC_URL = "https://mainnet.helius-rpc.com/?api-key=8dabc2e1-a043-4c0a-a675-52273c7ac948";
+exports.JUPITER_API_BASE_URL = "https://api.jup.ag";
+exports.RPC_URL = "https://mainnet.helius-rpc.com/?api-key=8dabc2e1-a043-4c0a-a675-52273c7ac948";
 /**
  * Token constants
  */
-export const USDC_MINT_ADDRESS = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+exports.USDC_MINT_ADDRESS = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 /**
  * Merchant constants
  */
@@ -16,21 +22,21 @@ export const USDC_MINT_ADDRESS = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 /**
  * Default swap settings
  */
-export const DEFAULT_SLIPPAGE_BPS = 50; // Default slippage percentage in basis points
+exports.DEFAULT_SLIPPAGE_BPS = 50; // Default slippage percentage in basis points
 /**
  * Default swap options
  */
-export const DEFAULT_SWAP_OPTIONS = {
-    dynamicComputeUnitLimit: true,
-    dynamicSlippage: true,
-    prioritizationFee: {
-        priorityLevelWithMaxLamports: {
-            maxLamports: 1000000,
-            priorityLevel: "veryHigh",
-        },
-    },
+exports.DEFAULT_SWAP_OPTIONS = {
+  dynamicComputeUnitLimit: true,
+  dynamicSlippage: true,
+  prioritizationFee: {
+    priorityLevelWithMaxLamports: {
+      maxLamports: 1000000,
+      priorityLevel: "veryHigh"
+    }
+  }
 };
 /**
  * Backend API endpoints
  */
-export const API_BASE_URL = "https://payszn-backend.onrender.com";
+exports.API_BASE_URL = "https://payszn-backend.onrender.com";
