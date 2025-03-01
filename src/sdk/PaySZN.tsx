@@ -227,6 +227,7 @@ class PaySZN {
         data.walletAddress,
         this.merchantEmbeddedATA
       );
+      console.log("Swap instruction: ", swapInstruction);
 
       // Sign the transaction
       toast.loading("Waiting for wallet confirmation...", { id: mainToastId });
@@ -235,6 +236,8 @@ class PaySZN {
           swapInstruction.swapTransaction,
           data.wallet as unknown as TransactionSigner
         );
+
+      console.log("Transaction Signature: ", transactionSignature);
 
       // Confirm transaction
       toast.loading("Confirming transaction...", { id: mainToastId });
