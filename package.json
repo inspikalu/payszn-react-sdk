@@ -13,7 +13,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "build:sdk": "tsc && babel dist --out-dir dist --extensions \".js,.jsx\" --copy-files"
+    "build:sdk": "tsc --skipLibCheck && babel dist --out-dir dist --extensions \".js,.jsx\" --copy-files"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.30.1",
