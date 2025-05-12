@@ -14,12 +14,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "build:sdk": "tsc --skipLibCheck && babel dist --out-dir dist --extensions \".js,.jsx\" --copy-files && npm run copy-css",
+    "build:sdk": "tsc --skipLibCheck && babel dist --out-dir dist --extensions \".js,.jsx\" --copy-files && npm run copy-css && npm run copy-assets",
     "copy-css": "cpx \"src/**/*.css\" dist",
     "copy-assets": "cpx \"src/sdk/assets/**/*\" dist/sdk/assets",
-    "version:patch": "npm run build:sdk && npm run copy-css && npm run copy-assets && npm version patch && npm publish",
-    "version:minor": "npm run build:sdk && npm run copy-css && npm run copy-assets && npm version minor && npm publish",
-    "version:major": "npm run build:sdk && npm run copy-css && npm run copy-assets && npm version major && npm publish"
+    "version:patch": "npm run build:sdk && npm version patch && npm publish",
+    "version:minor": "npm run build:sdk && npm version minor && npm publish",
+    "version:major": "npm run build:sdk && npm version major && npm publish"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.30.1",
