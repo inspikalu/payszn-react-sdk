@@ -1,6 +1,6 @@
 {
   "name": "payszn-sdk",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "private": false,
   "main": "dist/sdk/index.js",
   "types": "types/sdk/index.d.ts",
