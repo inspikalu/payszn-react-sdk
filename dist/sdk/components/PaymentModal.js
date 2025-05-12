@@ -378,14 +378,14 @@ var PaymentModal = function PaymentModal(_ref) {
           children: [/*#__PURE__*/(0, _jsxRuntime.jsx)("div", {
             className: "logo-circle",
             children: /*#__PURE__*/(0, _jsxRuntime.jsx)("img", {
-              src: "../assets/jupiter-logo.png",
+              src: "https://jup.ag/_next/image?url=%2Fsvg%2Fjupiter-logo.png&w=32&q=75",
               alt: "Jupiter logo",
               className: "logo-image"
             })
           }), /*#__PURE__*/(0, _jsxRuntime.jsx)("div", {
             className: "logo-circle",
             children: /*#__PURE__*/(0, _jsxRuntime.jsx)("img", {
-              src: "../assets/civic-logo.svg",
+              src: "https://cdn.prod.website-files.com/6721152f5cf7d1402980ed13/6724ff46d44044c6b1599154_civic-logo-white.svg",
               alt: "Civic logo",
               className: "logo-image"
             })
