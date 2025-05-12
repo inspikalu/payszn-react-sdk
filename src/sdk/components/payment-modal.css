@@ -6,35 +6,38 @@
   bottom: 0;
   background-color: #030712;
   z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
   overflow-y: auto;
 }
 
 .modal-card {
   width: 100%;
-  height: 100%;
-  max-width: none;
-  border-radius: 0;
-  padding: 2rem;
-  border: none;
+  max-width: 28rem;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(147, 51, 234, 0.2);
   background-color: #0a0a1a;
   color: white;
   position: relative;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  margin: auto;
 }
 
 .gradient-bg {
-  position: absolute;
-  inset: -4px;
+  position: fixed;
+  inset: 0;
   background: linear-gradient(to right, #9333ea, #3b82f6);
   filter: blur(15px);
   opacity: 0.2;
-  z-index: -10;
+  z-index: -1;
 }
 
 .purple-blob {
-  position: absolute;
+  position: fixed;
   top: -10%;
   left: -10%;
   width: 30rem;
@@ -43,10 +46,11 @@
   border-radius: 50%;
   filter: blur(80px);
   opacity: 0.1;
+  z-index: -1;
 }
 
 .blue-blob {
-  position: absolute;
+  position: fixed;
   bottom: -10%;
   right: -10%;
   width: 30rem;
@@ -55,39 +59,41 @@
   border-radius: 50%;
   filter: blur(80px);
   opacity: 0.1;
+  z-index: -1;
 }
 
 .card-header {
-  padding: 1rem 0;
+  padding: 0;
+  margin-top: 0;
 }
 
 .card-title {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   text-align: center;
   margin: 0;
 }
 
 .card-content {
-  flex: 1;
-  padding: 2rem 0;
+  padding: 0;
   margin-bottom: 0;
+  padding-top: 1.5rem;
 }
 
 .payment-heading {
-  font-size: 2.25rem;
+  font-size: 1.5rem;
   font-weight: 600;
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .token-grid {
   display: grid;
   grid-template-columns: 7fr 5fr;
-  gap: 1rem;
+  gap: 0.75rem;
   align-items: flex-start;
   justify-content: flex-start;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .select-container {
@@ -100,14 +106,14 @@
   border: 1px solid #1f1f3d;
   color: white;
   background-color: #111125;
-  height: 4rem;
-  border-radius: 0.75rem;
-  padding: 0 1.5rem;
+  height: 3rem;
+  border-radius: 0.5rem;
+  padding: 0 0.75rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  font-size: 1.1rem;
+  font-size: 0.875rem;
   user-select: none;
 }
 
@@ -117,21 +123,21 @@
 
 .select-dropdown {
   position: absolute;
-  top: calc(100% + 0.5rem);
+  top: calc(100% + 0.25rem);
   left: 0;
   width: 100%;
   background-color: #111125;
   border: 1px solid #1f1f3d;
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   overflow: hidden;
   z-index: 10;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-  max-height: 16rem;
+  max-height: 12rem;
   overflow-y: auto;
 }
 
 .select-dropdown::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 .select-dropdown::-webkit-scrollbar-track {
@@ -140,16 +146,15 @@
 
 .select-dropdown::-webkit-scrollbar-thumb {
   background-color: #1f1f3d;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 .select-option {
-  padding: 1rem;
+  padding: 0.75rem;
   cursor: pointer;
   transition: background-color 0.2s;
   display: flex;
   align-items: center;
-  font-size: 1rem;
 }
 
 .select-option:hover {
@@ -169,94 +174,83 @@
 }
 
 .token-amount-display {
-  font-size: 1.1rem;
+  font-size: 0.875rem;
   background-color: #111125;
-  padding: 0 1.5rem;
-  border-radius: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
   border: 1px solid #1f1f3d;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 4rem;
+  height: 3rem;
 }
 
 .token-amount-text {
   color: #60a5fa;
-  font-size: 1.2rem;
 }
 
 .token-symbol-text {
   color: #9ca3af;
-  margin-left: 0.5rem;
-  font-size: 1.1rem;
+  margin-left: 0.25rem;
 }
 
 .info-container {
-  margin-top: 1.5rem;
+  margin-top: 0.75rem;
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
+  gap: 0.5rem;
   background-color: rgba(17, 17, 37, 0.5);
-  padding: 1rem;
-  border-radius: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
   border: 1px solid rgba(31, 31, 61, 0.5);
 }
 
 .info-icon {
-  height: 1.2rem;
-  width: 1.2rem;
+  height: 1rem;
+  width: 1rem;
   color: #60a5fa;
   margin-top: 0.125rem;
   flex-shrink: 0;
 }
 
 .info-text {
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   color: #9ca3af;
   margin: 0;
-  line-height: 1.4;
 }
 
 .modal-footer {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
 }
 
 .pay-button {
   width: 100%;
-  border-radius: 0.75rem;
-  height: 4rem;
+  border-radius: 0.5rem;
+  height: 3rem;
   background: linear-gradient(to right, #9333ea, #3b82f6);
   color: white;
   font-weight: 500;
   transition: all 0.2s;
   border: 0;
   cursor: pointer;
-  font-size: 1.1rem;
 }
 
 .pay-button:hover {
   background: linear-gradient(to right, #7e22ce, #2563eb);
 }
 
-.pay-button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
 .footer-actions {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 
 .cancel-button {
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   color: #9ca3af;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.5rem 1rem;
 }
 
 .cancel-button:hover {
@@ -264,21 +258,20 @@
 }
 
 .fee-text {
-  font-size: 0.8rem;
+  font-size: 0.65rem;
   color: #9ca3af;
   margin: 0;
 }
 
 .flex-space {
   display: flex;
-  gap: 0.5rem;
-  align-items: center;
+  gap: 0.25rem;
 }
 
 .card-footer {
   border-top: 1px solid #1f2937;
-  margin-top: auto;
-  padding-top: 2rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
   padding-bottom: 1rem;
   display: flex;
   flex-direction: column;
@@ -287,48 +280,43 @@
 
 .footer-text {
   color: #9ca3af;
-  font-size: 1rem;
-  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
 }
 
 .logo-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .logo-circle {
-  width: 3rem;
-  height: 3rem;
+  height: auto;
+  width: 2rem;
   background-color: #1f2937;
-  border-radius: 50%;
+  border-radius: 9999px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem;
 }
 
 .logo-image {
-  height: 2rem;
-  width: 2rem;
-  object-fit: contain;
+  height: 1.5rem;
+  width: 1.5rem;
 }
 
 .loading-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  padding: 1rem;
+  gap: 0.5rem;
+  padding: 0.75rem;
   color: #9ca3af;
-  font-size: 1rem;
 }
 
 .loading-spinner {
   animation: spin 1s linear infinite;
-  width: 1.5rem;
-  height: 1.5rem;
 }
 
 @keyframes spin {
@@ -341,42 +329,27 @@
 }
 
 @media (max-width: 768px) {
+  .payment-container {
+    padding: 1rem;
+  }
+
   .modal-card {
-    padding: 1.5rem;
+    max-width: 100%;
   }
 
   .card-title {
-    font-size: 1.75rem;
+    font-size: 1.25rem;
   }
 
   .payment-heading {
-    font-size: 1.75rem;
-    margin-bottom: 2rem;
+    font-size: 1.25rem;
   }
 
   .custom-select {
-    height: 3.5rem;
-    font-size: 1rem;
-  }
-
-  .token-amount-display {
-    height: 3.5rem;
-    font-size: 1rem;
-  }
-
-  .purple-blob,
-  .blue-blob {
-    width: 20rem;
-    height: 20rem;
-    filter: blur(60px);
-  }
-
-  .info-text {
     font-size: 0.8rem;
   }
 
-  .pay-button {
-    height: 3.5rem;
-    font-size: 1rem;
+  .token-amount-display {
+    font-size: 0.8rem;
   }
 }
