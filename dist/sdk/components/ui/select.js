@@ -1,6 +1,13 @@
 "use strict";
 "use client";
 
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+var _jsxRuntime = require("react/jsx-runtime");
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 var __createBinding = void 0 && (void 0).__createBinding || (Object.create ? function (o, m, k, k2) {
   if (k2 === undefined) k2 = k;
   var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -75,25 +82,30 @@ var SelectTrigger = React.forwardRef(function (_a, ref) {
   var className = _a.className,
     children = _a.children,
     props = __rest(_a, ["className", "children"]);
-  return React.createElement(SelectPrimitive.Trigger, Object.assign({
+  return /*#__PURE__*/(0, _jsxRuntime.jsxs)(SelectPrimitive.Trigger, _objectSpread(_objectSpread({
     ref: ref,
     className: combineClasses("select-trigger", className)
-  }, props), children, React.createElement(SelectPrimitive.Icon, {
-    asChild: true
-  }, React.createElement(lucide_react_1.ChevronDown, {
-    className: "select-icon"
-  })));
+  }, props), {}, {
+    children: [children, /*#__PURE__*/(0, _jsxRuntime.jsx)(SelectPrimitive.Icon, {
+      asChild: true,
+      children: /*#__PURE__*/(0, _jsxRuntime.jsx)(lucide_react_1.ChevronDown, {
+        className: "select-icon"
+      })
+    })]
+  }));
 });
 exports.SelectTrigger = SelectTrigger;
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 var SelectScrollUpButton = React.forwardRef(function (_a, ref) {
   var className = _a.className,
     props = __rest(_a, ["className"]);
-  return React.createElement(SelectPrimitive.ScrollUpButton, Object.assign({
+  return /*#__PURE__*/(0, _jsxRuntime.jsx)(SelectPrimitive.ScrollUpButton, _objectSpread(_objectSpread({
     ref: ref,
     className: combineClasses("select-scroll-button", className)
-  }, props), React.createElement(lucide_react_1.ChevronUp, {
-    className: "select-scroll-button-icon"
+  }, props), {}, {
+    children: /*#__PURE__*/(0, _jsxRuntime.jsx)(lucide_react_1.ChevronUp, {
+      className: "select-scroll-button-icon"
+    })
   }));
 });
 exports.SelectScrollUpButton = SelectScrollUpButton;
@@ -101,11 +113,13 @@ SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
 var SelectScrollDownButton = React.forwardRef(function (_a, ref) {
   var className = _a.className,
     props = __rest(_a, ["className"]);
-  return React.createElement(SelectPrimitive.ScrollDownButton, Object.assign({
+  return /*#__PURE__*/(0, _jsxRuntime.jsx)(SelectPrimitive.ScrollDownButton, _objectSpread(_objectSpread({
     ref: ref,
     className: combineClasses("select-scroll-button", className)
-  }, props), React.createElement(lucide_react_1.ChevronDown, {
-    className: "select-scroll-button-icon"
+  }, props), {}, {
+    children: /*#__PURE__*/(0, _jsxRuntime.jsx)(lucide_react_1.ChevronDown, {
+      className: "select-scroll-button-icon"
+    })
   }));
 });
 exports.SelectScrollDownButton = SelectScrollDownButton;
@@ -116,20 +130,25 @@ var SelectContent = React.forwardRef(function (_a, ref) {
     _a$position = _a.position,
     position = _a$position === void 0 ? "popper" : _a$position,
     props = __rest(_a, ["className", "children", "position"]);
-  return React.createElement(SelectPrimitive.Portal, null, React.createElement(SelectPrimitive.Content, Object.assign({
-    ref: ref,
-    className: combineClasses("select-content", className),
-    position: position
-  }, props), React.createElement(SelectScrollUpButton, null), React.createElement(SelectPrimitive.Viewport, {
-    className: combineClasses("select-viewport", position === "popper" ? "select-viewport-popper" : "")
-  }, children), React.createElement(SelectScrollDownButton, null)));
+  return /*#__PURE__*/(0, _jsxRuntime.jsx)(SelectPrimitive.Portal, {
+    children: /*#__PURE__*/(0, _jsxRuntime.jsxs)(SelectPrimitive.Content, _objectSpread(_objectSpread({
+      ref: ref,
+      className: combineClasses("select-content", className),
+      position: position
+    }, props), {}, {
+      children: [/*#__PURE__*/(0, _jsxRuntime.jsx)(SelectScrollUpButton, {}), /*#__PURE__*/(0, _jsxRuntime.jsx)(SelectPrimitive.Viewport, {
+        className: combineClasses("select-viewport", position === "popper" ? "select-viewport-popper" : ""),
+        children: children
+      }), /*#__PURE__*/(0, _jsxRuntime.jsx)(SelectScrollDownButton, {})]
+    }))
+  });
 });
 exports.SelectContent = SelectContent;
 SelectContent.displayName = SelectPrimitive.Content.displayName;
 var SelectLabel = React.forwardRef(function (_a, ref) {
   var className = _a.className,
     props = __rest(_a, ["className"]);
-  return React.createElement(SelectPrimitive.Label, Object.assign({
+  return /*#__PURE__*/(0, _jsxRuntime.jsx)(SelectPrimitive.Label, _objectSpread({
     ref: ref,
     className: combineClasses("select-label", className)
   }, props));
@@ -140,21 +159,28 @@ var SelectItem = React.forwardRef(function (_a, ref) {
   var className = _a.className,
     children = _a.children,
     props = __rest(_a, ["className", "children"]);
-  return React.createElement(SelectPrimitive.Item, Object.assign({
+  return /*#__PURE__*/(0, _jsxRuntime.jsxs)(SelectPrimitive.Item, _objectSpread(_objectSpread({
     ref: ref,
     className: combineClasses("select-item", className)
-  }, props), React.createElement("span", {
-    className: "select-item-indicator-container"
-  }, React.createElement(SelectPrimitive.ItemIndicator, null, React.createElement(lucide_react_1.Check, {
-    className: "select-item-indicator-icon"
-  }))), React.createElement(SelectPrimitive.ItemText, null, children));
+  }, props), {}, {
+    children: [/*#__PURE__*/(0, _jsxRuntime.jsx)("span", {
+      className: "select-item-indicator-container",
+      children: /*#__PURE__*/(0, _jsxRuntime.jsx)(SelectPrimitive.ItemIndicator, {
+        children: /*#__PURE__*/(0, _jsxRuntime.jsx)(lucide_react_1.Check, {
+          className: "select-item-indicator-icon"
+        })
+      })
+    }), /*#__PURE__*/(0, _jsxRuntime.jsx)(SelectPrimitive.ItemText, {
+      children: children
+    })]
+  }));
 });
 exports.SelectItem = SelectItem;
 SelectItem.displayName = SelectPrimitive.Item.displayName;
 var SelectSeparator = React.forwardRef(function (_a, ref) {
   var className = _a.className,
     props = __rest(_a, ["className"]);
-  return React.createElement(SelectPrimitive.Separator, Object.assign({
+  return /*#__PURE__*/(0, _jsxRuntime.jsx)(SelectPrimitive.Separator, _objectSpread({
     ref: ref,
     className: combineClasses("select-separator", className)
   }, props));

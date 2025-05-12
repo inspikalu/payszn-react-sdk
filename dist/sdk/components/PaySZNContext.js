@@ -1,5 +1,6 @@
 "use strict";
 
+var _jsxRuntime = require("react/jsx-runtime");
 function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -99,13 +100,16 @@ var PaySZNProvider = function PaySZNProvider(_ref) {
     });
     setPaySZN(sdk);
   }, [apiKey, initialAmount]);
-  return react_1["default"].createElement(PaySZNContext.Provider, {
+  return /*#__PURE__*/(0, _jsxRuntime.jsx)(PaySZNContext.Provider, {
     value: {
       paySZN: paySZN,
       showModal: showModal,
       setShowModal: setShowModal,
       paymentIntent: paymentIntent
-    }
-  }, react_1["default"].createElement(WalletProviderWrapper_1.WalletProviderWrapper, null, children));
+    },
+    children: /*#__PURE__*/(0, _jsxRuntime.jsx)(WalletProviderWrapper_1.WalletProviderWrapper, {
+      children: children
+    })
+  });
 };
 exports.PaySZNProvider = PaySZNProvider;

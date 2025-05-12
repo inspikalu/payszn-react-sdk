@@ -1,6 +1,7 @@
 "use strict";
 "use client";
 
+var _jsxRuntime = require("react/jsx-runtime");
 var __createBinding = void 0 && (void 0).__createBinding || (Object.create ? function (o, m, k, k2) {
   if (k2 === undefined) k2 = k;
   var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -68,11 +69,15 @@ var WalletProviderWrapper = function WalletProviderWrapper(_ref) {
   },
   // eslint-disable-next-line react-hooks/exhaustive-deps
   [network]);
-  return react_1["default"].createElement(wallet_adapter_react_1.ConnectionProvider, {
-    endpoint: endpoint
-  }, react_1["default"].createElement(wallet_adapter_react_1.WalletProvider, {
-    wallets: wallets,
-    autoConnect: true
-  }, react_1["default"].createElement(wallet_adapter_react_ui_1.WalletModalProvider, null, children)));
+  return /*#__PURE__*/(0, _jsxRuntime.jsx)(wallet_adapter_react_1.ConnectionProvider, {
+    endpoint: endpoint,
+    children: /*#__PURE__*/(0, _jsxRuntime.jsx)(wallet_adapter_react_1.WalletProvider, {
+      wallets: wallets,
+      autoConnect: true,
+      children: /*#__PURE__*/(0, _jsxRuntime.jsx)(wallet_adapter_react_ui_1.WalletModalProvider, {
+        children: children
+      })
+    })
+  });
 };
 exports.WalletProviderWrapper = WalletProviderWrapper;

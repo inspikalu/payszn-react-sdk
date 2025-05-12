@@ -1,5 +1,6 @@
 "use strict";
 
+var _jsxRuntime = require("react/jsx-runtime");
 var __importDefault = void 0 && (void 0).__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -14,7 +15,9 @@ var PaySZNContext_1 = require("./PaySZNContext");
 var PaymentButton = function PaymentButton() {
   var _ref = (0, PaySZNContext_1.usePaySZN)(),
     paySZN = _ref.paySZN;
-  if (!paySZN) return react_1["default"].createElement("div", null, "Loading...");
+  if (!paySZN) return /*#__PURE__*/(0, _jsxRuntime.jsx)("div", {
+    children: "Loading..."
+  });
   return paySZN.renderPaymentButton();
 };
 exports.PaymentButton = PaymentButton;
