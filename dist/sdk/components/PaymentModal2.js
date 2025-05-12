@@ -46,11 +46,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 var react_1 = __importDefault(require("react"));
 var react_2 = require("react");
-var lucide_react_1 = require("lucide-react");
-var wallet_adapter_react_1 = require("@solana/wallet-adapter-react");
+var card_1 = require("./ui/card");
+var button_1 = require("./ui/button");
 var wallet_adapter_react_ui_1 = require("@solana/wallet-adapter-react-ui");
-var sonner_1 = require("sonner");
 var getFungibleTokens_1 = require("../utils/getFungibleTokens");
+var wallet_adapter_react_1 = require("@solana/wallet-adapter-react");
+var lucide_react_1 = require("lucide-react");
+var sonner_1 = require("sonner");
 var JupiterService_1 = __importDefault(require("../services/JupiterService"));
 var TokenService_1 = __importDefault(require("../services/TokenService"));
 require("./payment-modal.css");
@@ -58,36 +60,34 @@ var PaymentModal = function PaymentModal(_ref) {
   var onSubmit = _ref.onSubmit,
     amount = _ref.amount,
     onClose = _ref.onClose;
-  var _a, _b;
+  var _a;
   var _ref2 = (0, react_2.useState)(),
     _ref3 = _slicedToArray(_ref2, 2),
     selectedTokenId = _ref3[0],
     setSelectedTokenId = _ref3[1];
-  var _ref4 = (0, react_2.useState)([]),
-    _ref5 = _slicedToArray(_ref4, 2),
-    walletTokens = _ref5[0],
-    setWalletTokens = _ref5[1];
-  var _ref6 = (0, react_2.useState)(false),
+  var _ref4 = (0, react_2.useState)("USDC"),
+    _ref5 = _slicedToArray(_ref4, 1),
+    toToken = _ref5[0];
+  var _ref6 = (0, react_2.useState)([]),
     _ref7 = _slicedToArray(_ref6, 2),
-    isLoading = _ref7[0],
-    setIsLoading = _ref7[1];
+    walletTokens = _ref7[0],
+    setWalletTokens = _ref7[1];
   var _ref8 = (0, react_2.useState)(false),
     _ref9 = _slicedToArray(_ref8, 2),
-    isSubmitting = _ref9[0],
-    setIsSubmitting = _ref9[1];
-  var _ref10 = (0, react_2.useState)(null),
+    isLoading = _ref9[0],
+    setIsLoading = _ref9[1];
+  var _ref10 = (0, react_2.useState)(false),
     _ref11 = _slicedToArray(_ref10, 2),
-    estimatedTokenAmount = _ref11[0],
-    setEstimatedTokenAmount = _ref11[1];
-  var _ref12 = (0, react_2.useState)(false),
+    isSubmitting = _ref11[0],
+    setIsSubmitting = _ref11[1];
+  var _ref12 = (0, react_2.useState)(null),
     _ref13 = _slicedToArray(_ref12, 2),
-    isCalculating = _ref13[0],
-    setIsCalculating = _ref13[1];
+    estimatedTokenAmount = _ref13[0],
+    setEstimatedTokenAmount = _ref13[1];
   var _ref14 = (0, react_2.useState)(false),
     _ref15 = _slicedToArray(_ref14, 2),
-    isOpen = _ref15[0],
-    setIsOpen = _ref15[1];
-  var dropdownRef = (0, react_2.useRef)(null);
+    isCalculating = _ref15[0],
+    setIsCalculating = _ref15[1];
   var wallet = (0, wallet_adapter_react_1.useWallet)();
   // Fetch wallet tokens when connected
   (0, react_2.useEffect)(function () {
@@ -104,35 +104,37 @@ var PaymentModal = function PaymentModal(_ref) {
                 return (0, getFungibleTokens_1.getFungibleTokensForWalletV2)(wallet.publicKey.toString());
               case 4:
                 tokens = _context.sent;
+                console.log("These are the tokens, ", tokens);
                 setWalletTokens(tokens);
+                // If there are tokens, set the first one as default
                 if (tokens.length > 0) {
                   setSelectedTokenId(tokens[0].mint);
                   sonner_1.toast.success("Wallet tokens loaded successfully");
                 } else {
                   sonner_1.toast.warning("No tokens found in your wallet");
                 }
-                _context.next = 13;
+                _context.next = 14;
                 break;
-              case 9:
-                _context.prev = 9;
+              case 10:
+                _context.prev = 10;
                 _context.t0 = _context["catch"](1);
                 console.error("Error fetching wallet tokens:", _context.t0);
                 sonner_1.toast.error("Failed to load wallet tokens");
-              case 13:
-                _context.prev = 13;
+              case 14:
+                _context.prev = 14;
                 setIsLoading(false);
-                return _context.finish(13);
-              case 16:
+                return _context.finish(14);
+              case 17:
               case "end":
                 return _context.stop();
             }
-          }, _callee, null, [[1, 9, 13, 16]]);
+          }, _callee, null, [[1, 10, 14, 17]]);
         }));
       };
       fetchWalletTokens();
     }
   }, [wallet.connected, wallet.publicKey]);
-  // Calculate estimated token amount
+  // Calculate estimated token amount when token selection changes
   (0, react_2.useEffect)(function () {
     var calculateRequiredAmount = function calculateRequiredAmount() {
       return __awaiter(void 0, void 0, void 0, /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
@@ -153,7 +155,8 @@ var PaymentModal = function PaymentModal(_ref) {
               return JupiterService_1["default"].getTokenPriceInUSDC(selectedTokenId);
             case 7:
               tokenPrice = _context2.sent;
-              requiredAmount = TokenService_1["default"].calculateRequiredTokenAmount(amount, tokenPrice);
+              // Use TokenService for calculation
+              requiredAmount = TokenService_1["default"].calculateRequiredTokenAmount(amount, tokenPrice); // Format to 6 decimal places for display
               setEstimatedTokenAmount(parseFloat(requiredAmount.toFixed(6)));
               _context2.next = 17;
               break;
@@ -176,44 +179,35 @@ var PaymentModal = function PaymentModal(_ref) {
     };
     calculateRequiredAmount();
   }, [selectedTokenId, amount]);
-  // Close dropdown when clicking outside
-  (0, react_2.useEffect)(function () {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return function () {
-      return document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  // Find the actual token object based on selected ID (using mint)
   var getSelectedToken = function getSelectedToken() {
+    if (!selectedTokenId) return undefined;
     return walletTokens.find(function (token) {
       return token.mint === selectedTokenId;
     });
   };
-  var handleSubmit = function handleSubmit() {
+  var handleSubmit = function handleSubmit(wallet, walletAddress) {
     return __awaiter(void 0, void 0, void 0, /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
       var fromToken, toastId;
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
         while (1) switch (_context3.prev = _context3.next) {
           case 0:
             fromToken = getSelectedToken();
-            if (!(!fromToken || !wallet.publicKey)) {
+            if (!(!fromToken || !amount || !toToken)) {
               _context3.next = 4;
               break;
             }
-            sonner_1.toast.error("Please select a token and connect wallet");
+            sonner_1.toast.error("Please select a token and enter an amount");
             return _context3.abrupt("return");
           case 4:
             setIsSubmitting(true);
+            // Show a loading toast that we'll update with the result
             toastId = sonner_1.toast.loading("Processing your payment...");
             try {
               onSubmit({
                 fromToken: fromToken,
+                walletAddress: walletAddress,
                 wallet: wallet,
-                walletAddress: wallet.publicKey.toString(),
                 amount: amount
               });
               sonner_1.toast.success("Payment completed successfully!", {
@@ -234,13 +228,13 @@ var PaymentModal = function PaymentModal(_ref) {
       }, _callee3);
     }));
   };
-  var handleSelectToken = function handleSelectToken(mint) {
-    setSelectedTokenId(mint);
-    setIsOpen(false);
+  // Handle change for the native select element
+  var handleSelectChange = function handleSelectChange(e) {
+    setSelectedTokenId(e.target.value);
   };
-  return react_1["default"].createElement("div", {
-    className: "payment-container"
-  }, react_1["default"].createElement("div", {
+  return react_1["default"].createElement("section", {
+    className: "modal-overlay"
+  }, react_1["default"].createElement(card_1.Card, {
     className: "modal-card"
   }, react_1["default"].createElement("div", {
     className: "gradient-bg"
@@ -248,113 +242,85 @@ var PaymentModal = function PaymentModal(_ref) {
     className: "purple-blob"
   }), react_1["default"].createElement("div", {
     className: "blue-blob"
-  }), react_1["default"].createElement("div", {
+  }), react_1["default"].createElement(card_1.CardHeader, {
     className: "card-header"
-  }, react_1["default"].createElement("h2", {
+  }, react_1["default"].createElement(card_1.CardTitle, {
     className: "card-title"
-  }, "Payszn")), react_1["default"].createElement("div", {
+  }, "Pay $", amount)), react_1["default"].createElement(card_1.CardContent, {
     className: "card-content"
-  }, react_1["default"].createElement("h2", {
-    className: "payment-heading"
-  }, "Pay $", amount), react_1["default"].createElement("div", {
+  }, react_1["default"].createElement("div", {
     className: "token-grid"
   }, react_1["default"].createElement("div", {
-    className: "select-container",
-    ref: dropdownRef
-  }, react_1["default"].createElement("div", {
-    className: "custom-select",
-    onClick: function onClick() {
-      return setIsOpen(!isOpen);
-    }
+    className: "select-container"
   }, isLoading ? react_1["default"].createElement("div", {
     className: "loading-container"
   }, react_1["default"].createElement(lucide_react_1.Loader2, {
-    className: "loading-spinner",
-    size: 16
-  }), react_1["default"].createElement("span", null, "Loading...")) : react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("span", null, ((_a = getSelectedToken()) === null || _a === void 0 ? void 0 : _a.symbol) || "Select token"), react_1["default"].createElement(lucide_react_1.ChevronDown, {
-    className: "chevron-icon ".concat(isOpen ? "open" : ""),
-    size: 16
-  }))), isOpen && react_1["default"].createElement("div", {
-    className: "select-dropdown"
-  }, walletTokens.map(function (token) {
-    return react_1["default"].createElement("div", {
+    className: "loading-spinner"
+  }), react_1["default"].createElement("p", {
+    className: "loading-text"
+  }, "Loading tokens...")) : react_1["default"].createElement("select", {
+    className: "html-select",
+    value: selectedTokenId,
+    onChange: handleSelectChange
+  }, react_1["default"].createElement("option", {
+    value: "",
+    disabled: true
+  }, "Select token"), walletTokens.length === 0 ? react_1["default"].createElement("option", {
+    value: "",
+    disabled: true
+  }, "No tokens found") : walletTokens.map(function (token) {
+    return react_1["default"].createElement("option", {
       key: token.mint,
-      className: "select-option ".concat(token.mint === selectedTokenId ? "selected" : ""),
-      onClick: function onClick() {
-        return handleSelectToken(token.mint);
-      }
+      value: token.mint
     }, token.symbol);
-  }), walletTokens.length === 0 && react_1["default"].createElement("div", {
-    className: "select-option disabled"
-  }, "No tokens found"))), react_1["default"].createElement("div", {
+  }))), react_1["default"].createElement("div", {
     className: "token-amount-display"
   }, isCalculating ? react_1["default"].createElement("div", {
     className: "flex-space"
   }, react_1["default"].createElement(lucide_react_1.Loader2, {
-    className: "loading-spinner",
-    size: 16
-  }), react_1["default"].createElement("span", null, "Calculating...")) : estimatedTokenAmount ? react_1["default"].createElement("div", {
+    className: "mini-spinner"
+  }), react_1["default"].createElement("span", {
+    className: "loading-text"
+  }, "Calculating...")) : estimatedTokenAmount ? react_1["default"].createElement("div", {
     className: "flex-space"
   }, react_1["default"].createElement("span", {
     className: "token-amount-text"
   }, estimatedTokenAmount), react_1["default"].createElement("span", {
     className: "token-symbol-text"
-  }, (_b = getSelectedToken()) === null || _b === void 0 ? void 0 : _b.symbol)) : react_1["default"].createElement("span", {
+  }, ((_a = getSelectedToken()) === null || _a === void 0 ? void 0 : _a.symbol) || "tokens")) : react_1["default"].createElement("span", {
     className: "token-symbol-text"
-  }, "-"))), react_1["default"].createElement("div", {
+  }, "Select token"))), react_1["default"].createElement("div", {
     className: "info-container"
-  }, react_1["default"].createElement(lucide_react_1.AlertCircle, {
+  }, react_1["default"].createElement(lucide_react_1.InfoIcon, {
     className: "info-icon"
   }), react_1["default"].createElement("p", {
     className: "info-text"
-  }, "The amount of tokens displayed are estimated and may vary slightly due to price fluctuations and slippage.")), react_1["default"].createElement("div", {
+  }, "The amount of tokens displayed are estimated and may vary slightly due to price fluctuations and slippage."))), react_1["default"].createElement("footer", {
     className: "modal-footer"
   }, !wallet.connected ? react_1["default"].createElement("div", {
     className: "centered-wallet"
-  }, react_1["default"].createElement(wallet_adapter_react_ui_1.WalletMultiButton, {
-    style: {
-      backgroundColor: "#9333ea",
-      borderRadius: "0.5rem",
-      height: "3rem",
-      width: "100%"
-    }
-  })) : react_1["default"].createElement("button", {
+  }, react_1["default"].createElement(wallet_adapter_react_ui_1.WalletMultiButton, null)) : react_1["default"].createElement(button_1.Button, {
     className: "pay-button",
-    onClick: handleSubmit,
-    disabled: !selectedTokenId || isSubmitting
+    disabled: !wallet.connected || !selectedTokenId || !amount || !toToken || isSubmitting,
+    onClick: function onClick() {
+      var _a;
+      return handleSubmit(wallet, ((_a = wallet.publicKey) === null || _a === void 0 ? void 0 : _a.toString()) || "");
+    }
   }, isSubmitting ? react_1["default"].createElement("div", {
-    className: "flex-space"
+    className: "button-content"
   }, react_1["default"].createElement(lucide_react_1.Loader2, {
-    className: "loading-spinner",
-    size: 16
+    className: "loading-spinner"
   }), "Processing...") : "Pay"), react_1["default"].createElement("div", {
     className: "footer-actions"
   }, react_1["default"].createElement("button", {
-    className: "cancel-button",
-    onClick: onClose
+    onClick: onClose,
+    className: "cancel-button"
   }, "Cancel"), react_1["default"].createElement("p", {
     className: "fee-text"
-  }, "Transaction fee: 0.5% \u2022 Network fee: ~0.00005 SOL")))), react_1["default"].createElement("div", {
-    className: "card-footer"
-  }, react_1["default"].createElement("p", {
-    className: "footer-text"
-  }, "powered by jupiter and civic"), react_1["default"].createElement("div", {
-    className: "logo-container"
-  }, react_1["default"].createElement("div", {
-    className: "logo-circle"
-  }, react_1["default"].createElement("img", {
-    src: "/jupiter-logo.png",
-    alt: "Jupiter logo",
-    className: "logo-image"
-  })), react_1["default"].createElement("div", {
-    className: "logo-circle"
-  }, react_1["default"].createElement("img", {
-    src: "/civic-logo.png",
-    alt: "Civic logo",
-    className: "logo-image"
-  }))))), react_1["default"].createElement(sonner_1.Toaster, {
+  }, "Transaction fee: 0.5% \u2022 Network fee: ~0.00005 SOL")))), react_1["default"].createElement(sonner_1.Toaster, {
     position: "top-right",
     toastOptions: {
+      duration: 4000,
       className: "toaster-style"
     }
   }));

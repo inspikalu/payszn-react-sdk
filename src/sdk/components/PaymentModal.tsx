@@ -1,20 +1,18 @@
 "use client";
 import React from "react";
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Button } from "./ui/button";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import { getFungibleTokensForWalletV2 } from "../utils/getFungibleTokens";
+import { useState, useRef, useEffect } from "react";
+import { AlertCircle, ChevronDown, Loader2 } from "lucide-react";
 import {
   useWallet,
   type WalletContextState,
 } from "@solana/wallet-adapter-react";
-import type { FungibleToken } from "../types";
-import { Loader2, InfoIcon } from "lucide-react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { toast, Toaster } from "sonner";
+import type { FungibleToken } from "../types";
+import { getFungibleTokensForWalletV2 } from "../utils/getFungibleTokens";
 import JupiterService from "../services/JupiterService";
 import TokenService from "../services/TokenService";
-import "./payment-modal.css";
+import "./payment-modal.css"
 
 interface PaymentModalProps {
   onSubmit: (data: {
@@ -29,7 +27,6 @@ interface PaymentModalProps {
 
 const PaymentModal = ({ onSubmit, amount, onClose }: PaymentModalProps) => {
   const [selectedTokenId, setSelectedTokenId] = useState<string>();
-  const [toToken] = useState("USDC");
   const [walletTokens, setWalletTokens] = useState<FungibleToken[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,6 +34,8 @@ const PaymentModal = ({ onSubmit, amount, onClose }: PaymentModalProps) => {
     number | null
   >(null);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const wallet = useWallet();
 
   // Fetch wallet tokens when connected
@@ -48,11 +47,8 @@ const PaymentModal = ({ onSubmit, amount, onClose }: PaymentModalProps) => {
           const tokens = await getFungibleTokensForWalletV2(
             wallet.publicKey!.toString()
           );
-
-          console.log("These are the tokens, ", tokens);
           setWalletTokens(tokens);
 
-          // If there are tokens, set the first one as default
           if (tokens.length > 0) {
             setSelectedTokenId(tokens[0].mint);
             toast.success("Wallet tokens loaded successfully");
@@ -70,7 +66,7 @@ const PaymentModal = ({ onSubmit, amount, onClose }: PaymentModalProps) => {
     }
   }, [wallet.connected, wallet.publicKey]);
 
-  // Calculate estimated token amount when token selection changes
+  // Calculate estimated token amount
   useEffect(() => {
     const calculateRequiredAmount = async () => {
       if (!selectedTokenId || !amount) {
@@ -80,18 +76,13 @@ const PaymentModal = ({ onSubmit, amount, onClose }: PaymentModalProps) => {
 
       setIsCalculating(true);
       try {
-        // Use the actual JupiterService implementation
         const tokenPrice = await JupiterService.getTokenPriceInUSDC(
           selectedTokenId
         );
-
-        // Use TokenService for calculation
         const requiredAmount = TokenService.calculateRequiredTokenAmount(
           amount,
           tokenPrice
         );
-
-        // Format to 6 decimal places for display
         setEstimatedTokenAmount(parseFloat(requiredAmount.toFixed(6)));
       } catch (error) {
         console.error("Error calculating token amount:", error);
@@ -105,29 +96,42 @@ const PaymentModal = ({ onSubmit, amount, onClose }: PaymentModalProps) => {
     calculateRequiredAmount();
   }, [selectedTokenId, amount]);
 
-  // Find the actual token object based on selected ID (using mint)
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const getSelectedToken = (): FungibleToken | undefined => {
-    if (!selectedTokenId) return undefined;
     return walletTokens.find((token) => token.mint === selectedTokenId);
   };
 
-  const handleSubmit = async (
-    wallet: WalletContextState,
-    walletAddress: string
-  ) => {
+  const handleSubmit = async () => {
     const fromToken = getSelectedToken();
-    if (!fromToken || !amount || !toToken) {
-      toast.error("Please select a token and enter an amount");
+    if (!fromToken || !wallet.publicKey) {
+      toast.error("Please select a token and connect wallet");
       return;
     }
 
     setIsSubmitting(true);
-
-    // Show a loading toast that we'll update with the result
     const toastId = toast.loading("Processing your payment...");
 
     try {
-      await onSubmit({ fromToken, walletAddress, wallet, amount });
+      onSubmit({
+        fromToken,
+        wallet,
+        walletAddress: wallet.publicKey.toString(),
+        amount,
+      });
       toast.success("Payment completed successfully!", { id: toastId });
     } catch (error) {
       console.error("Payment submission error:", error);
@@ -142,54 +146,72 @@ const PaymentModal = ({ onSubmit, amount, onClose }: PaymentModalProps) => {
     }
   };
 
-  // Handle change for the native select element
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedTokenId(e.target.value);
+  const handleSelectToken = (mint: string) => {
+    setSelectedTokenId(mint);
+    setIsOpen(false);
   };
 
   return (
-    <section className="modal-overlay">
-      <Card className="modal-card">
-        {/* Gradient background effects */}
+    <div className="payment-container">
+
+      <div className="modal-card">
         <div className="gradient-bg"></div>
         <div className="purple-blob"></div>
         <div className="blue-blob"></div>
 
-        <CardHeader className="card-header">
-          <CardTitle className="card-title">Pay ${amount}</CardTitle>
-        </CardHeader>
-        <CardContent className="card-content">
+        <div className="card-header">
+          <h2 className="card-title">Payszn</h2>
+        </div>
+
+        <div className="card-content">
+          <h2 className="payment-heading">Pay ${amount}</h2>
+
           <div className="token-grid">
-            <div className="select-container">
-              {isLoading ? (
-                <div className="loading-container">
-                  <Loader2 className="loading-spinner" />
-                  <p className="loading-text">Loading tokens...</p>
-                </div>
-              ) : (
-                <select 
-                  className="html-select" 
-                  value={selectedTokenId} 
-                  onChange={handleSelectChange}
-                >
-                  <option value="" disabled>Select token</option>
-                  {walletTokens.length === 0 ? (
-                    <option value="" disabled>No tokens found</option>
-                  ) : (
-                    walletTokens.map((token) => (
-                      <option key={token.mint} value={token.mint}>
-                        {token.symbol}
-                      </option>
-                    ))
+            <div className="select-container" ref={dropdownRef}>
+              <div className="custom-select" onClick={() => setIsOpen(!isOpen)}>
+                {isLoading ? (
+                  <div className="loading-container">
+                    <Loader2 className="loading-spinner" size={16} />
+                    <span>Loading...</span>
+                  </div>
+                ) : (
+                  <>
+                    <span>{getSelectedToken()?.symbol || "Select token"}</span>
+                    <ChevronDown
+                      className={`chevron-icon ${isOpen ? "open" : ""}`}
+                      size={16}
+                    />
+                  </>
+                )}
+              </div>
+
+              {isOpen && (
+                <div className="select-dropdown">
+                  {walletTokens.map((token) => (
+                    <div
+                      key={token.mint}
+                      className={`select-option ${
+                        token.mint === selectedTokenId ? "selected" : ""
+                      }`}
+                      onClick={() => handleSelectToken(token.mint)}
+                    >
+                      {token.symbol}
+                    </div>
+                  ))}
+                  {walletTokens.length === 0 && (
+                    <div className="select-option disabled">
+                      No tokens found
+                    </div>
                   )}
-                </select>
+                </div>
               )}
             </div>
+
             <div className="token-amount-display">
               {isCalculating ? (
                 <div className="flex-space">
-                  <Loader2 className="mini-spinner" />
-                  <span className="loading-text">Calculating...</span>
+                  <Loader2 className="loading-spinner" size={16} />
+                  <span>Calculating...</span>
                 </div>
               ) : estimatedTokenAmount ? (
                 <div className="flex-space">
@@ -197,71 +219,88 @@ const PaymentModal = ({ onSubmit, amount, onClose }: PaymentModalProps) => {
                     {estimatedTokenAmount}
                   </span>
                   <span className="token-symbol-text">
-                    {getSelectedToken()?.symbol || "tokens"}
+                    {getSelectedToken()?.symbol}
                   </span>
                 </div>
               ) : (
-                <span className="token-symbol-text">Select token</span>
+                <span className="token-symbol-text">-</span>
               )}
             </div>
           </div>
 
-          {/* Additional Info Text */}
           <div className="info-container">
-            <InfoIcon className="info-icon" />
+            <AlertCircle className="info-icon" />
             <p className="info-text">
               The amount of tokens displayed are estimated and may vary slightly
               due to price fluctuations and slippage.
             </p>
           </div>
-        </CardContent>
-        <footer className="modal-footer">
-          {!wallet.connected ? (
-            <div className="centered-wallet">
-              <WalletMultiButton />
+
+          <div className="modal-footer">
+            {!wallet.connected ? (
+              <div className="centered-wallet">
+                <WalletMultiButton
+                  style={{
+                    backgroundColor: "#9333ea",
+                    borderRadius: "0.5rem",
+                    height: "3rem",
+                    width: "100%",
+                  }}
+                />
+              </div>
+            ) : (
+              <button
+                className="pay-button"
+                onClick={handleSubmit}
+                disabled={!selectedTokenId || isSubmitting}
+              >
+                {isSubmitting ? (
+                  <div className="flex-space">
+                    <Loader2 className="loading-spinner" size={16} />
+                    Processing...
+                  </div>
+                ) : (
+                  "Pay"
+                )}
+              </button>
+            )}
+
+            <div className="footer-actions">
+              <button className="cancel-button" onClick={onClose}>
+                Cancel
+              </button>
+              <p className="fee-text">
+                Transaction fee: 0.5% • Network fee: ~0.00005 SOL
+              </p>
             </div>
-          ) : (
-            <Button
-              className="pay-button"
-              disabled={
-                !wallet.connected ||
-                !selectedTokenId ||
-                !amount ||
-                !toToken ||
-                isSubmitting
-              }
-              onClick={() =>
-                handleSubmit(wallet, wallet.publicKey?.toString() || "")
-              }
-            >
-              {isSubmitting ? (
-                <div className="button-content">
-                  <Loader2 className="loading-spinner" />
-                  Processing...
-                </div>
-              ) : (
-                "Pay"
-              )}
-            </Button>
-          )}
-          <div className="footer-actions">
-            <button onClick={onClose} className="cancel-button">
-              Cancel
-            </button>
-            <p className="fee-text">
-              Transaction fee: 0.5% • Network fee: ~0.00005 SOL
-            </p>
           </div>
-        </footer>
-      </Card>
+        </div>
+
+        <div className="card-footer">
+          <p className="footer-text">powered by jupiter and civic</p>
+          <div className="logo-container">
+            <div className="logo-circle">
+              <img
+                src="/jupiter-logo.png"
+                alt="Jupiter logo"
+                className="logo-image"
+              />
+            </div>
+            <div className="logo-circle">
+              <img
+                src="/civic-logo.png"
+                alt="Civic logo"
+                className="logo-image"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
       <Toaster
         position="top-right"
-        toastOptions={{
-          duration: 4000,
-          className: "toaster-style",
-        }}
+        toastOptions={{ className: "toaster-style" }}
       />
-    </section>
+    </div>
   );
 };
 
