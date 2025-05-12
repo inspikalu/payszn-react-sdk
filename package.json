@@ -15,7 +15,8 @@
     "start": "next start",
     "lint": "next lint",
     "build:sdk": "tsc --skipLibCheck && babel dist --out-dir dist --extensions \".js,.jsx\" --copy-files && npm run copy-css",
-    "copy-css": "cpx \"src/**/*.css\" dist"
+    "copy-css": "cpx \"src/**/*.css\" dist",
+    "copy-assets": "cpx \"src/sdk/assets/**/*\" dist/sdk/assets"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.30.1",

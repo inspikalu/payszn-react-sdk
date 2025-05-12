@@ -281,14 +281,14 @@ const PaymentModal = ({ onSubmit, amount, onClose }: PaymentModalProps) => {
           <div className="logo-container">
             <div className="logo-circle">
               <img
-                src="/jupiter-logo.png"
+                src="../assets/jupiter-logo.png"
                 alt="Jupiter logo"
                 className="logo-image"
               />
             </div>
             <div className="logo-circle">
               <img
-                src="/civic-logo.png"
+                src="../assets/civic-logo.svg"
                 alt="Civic logo"
                 className="logo-image"
               />
