@@ -214,9 +214,9 @@ const PaymentModal = ({ onSubmit, amount, onClose }) => {
         </div>
 
         <div className="card-footer">
-          <p className="footer-text">powered by jupiter and civic</p>
+          <p className="footer-text">powered by:</p>
           <div className="logo-container">
-            <div className="logo-circle">
+            <div className="logo-circle square">
               <img src="https://jup.ag/_next/image?url=%2Fsvg%2Fjupiter-logo.png&w=32&q=75" alt="Jupiter logo" className="logo-image"/>
             </div>
             <div className="logo-circle">

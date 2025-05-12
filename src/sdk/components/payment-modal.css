@@ -294,12 +294,13 @@
 
 .logo-circle {
   height: auto;
-  width: 2rem;
-  background-color: #1f2937;
-  border-radius: 9999px;
+  width: 7rem;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.logo-circle.square {
+  aspect-ratio: square;
 }
 
 .logo-image {

@@ -372,11 +372,11 @@ var PaymentModal = function PaymentModal(_ref) {
         className: "card-footer",
         children: [/*#__PURE__*/(0, _jsxRuntime.jsx)("p", {
           className: "footer-text",
-          children: "powered by jupiter and civic"
+          children: "powered by:"
         }), /*#__PURE__*/(0, _jsxRuntime.jsxs)("div", {
           className: "logo-container",
           children: [/*#__PURE__*/(0, _jsxRuntime.jsx)("div", {
-            className: "logo-circle",
+            className: "logo-circle square",
             children: /*#__PURE__*/(0, _jsxRuntime.jsx)("img", {
               src: "https://jup.ag/_next/image?url=%2Fsvg%2Fjupiter-logo.png&w=32&q=75",
               alt: "Jupiter logo",
