@@ -136,7 +136,7 @@ class JupiterService {
       throw new Error("Wallet public key is required");
     }
 
-    console.log(destinationTokenAccount);
+    console.log("Destination Token account: ", destinationTokenAccount);
 
     // Merge user options with defaults
     const mergedOptions = { ...DEFAULT_SWAP_OPTIONS, ...options };

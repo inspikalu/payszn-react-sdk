@@ -241,6 +241,16 @@ class PaySZN {
                         const userUsdcATA = await TokenService.getUSDCATA(data.walletAddress);
                         console.log("User's USDC ATA:", userUsdcATA);
 
+                        // Log merchant's USDC ATA
+                        console.log("Merchant's USDC ATA:", this.merchantEmbeddedATA);
+
+                        // Validate merchant's ATA
+                        if (!this.merchantEmbeddedATA) {
+                                const errorMsg = "Merchant USDC ATA not initialized";
+                                toast.error(errorMsg, { id: mainToastId });
+                                throw new Error(errorMsg);
+                        }
+
                         // Get swap quote
                         toast.loading("Getting swap quote...", { id: mainToastId });
                         const quoteResult = await JupiterService.getSwapQuote(
