@@ -15,6 +15,8 @@ import { API_BASE_URL, DEFAULT_SLIPPAGE_BPS } from "./services/constants";
 import { toLamports } from "./utils/conversion";
 import axios from "axios";
 import { toast } from "sonner"; // Import toast from sonner
+import { Connection, clusterApiUrl, PublicKey, } from "@solana/web3.js";
+import { getAccount, TokenAccountNotFoundError, TokenInvalidAccountOwnerError } from "@solana/spl-token"
 
 /**
  * PaySZN handles cryptocurrency payment processing with Jupiter swap integration
@@ -44,21 +46,52 @@ class PaySZN {
                         );
                         const MERCHANT_WALLET_ADDRESS = response.data.wallet;
                         if (!MERCHANT_WALLET_ADDRESS) {
-                                throw new Error(
-                                        "Failed to fetch merchant wallet address check api key"
-                                );
+                                throw new Error("Failed to fetch merchant wallet address, check API key");
                         }
                         this.merchantWallet = MERCHANT_WALLET_ADDRESS;
-                        const merchantATA = await TokenService.getUSDCATA(
-                                MERCHANT_WALLET_ADDRESS
-                        );
-                        this.merchantEmbeddedATA = merchantATA
-                        console.log("Merchant ata:", merchantATA)
+
+                        // Get merchant's USDC ATA
+                        const merchantATA = await TokenService.getUSDCATA(MERCHANT_WALLET_ADDRESS);
+                        this.merchantEmbeddedATA = merchantATA;
+                        console.log("Merchant USDC ATA:", merchantATA);
+
+                        // Confirm the ATA exists on-chain
+                        const connection = new Connection(clusterApiUrl("mainnet-beta"));
+                        try {
+                                const ataAccount = await getAccount(
+                                        connection,
+                                        new PublicKey(merchantATA)
+                                );
+                                console.log("Merchant USDC ATA confirmed on-chain:", {
+                                        address: merchantATA,
+                                        mint: ataAccount.mint.toBase58(),
+                                        owner: ataAccount.owner.toBase58(),
+                                        amount: ataAccount.amount.toString(),
+                                });
+                        } catch (error) {
+                                if (
+                                        error instanceof TokenAccountNotFoundError ||
+                                        error instanceof TokenInvalidAccountOwnerError
+                                ) {
+                                        console.warn(
+                                                "Merchant USDC ATA does not exist on-chain:",
+                                                merchantATA,
+                                                "The merchant must create this ATA before receiving payments."
+                                        );
+                                        toast.error(
+                                                "Merchant USDC account not found. Please ensure the merchant has created their USDC token account."
+                                        );
+                                } else {
+                                        console.error("Error verifying merchant USDC ATA:", error);
+                                        throw new Error(`Failed to verify merchant USDC ATA: ${error instanceof Error ? error.message : String(error)}`);
+                                }
+                        }
                 } catch (error) {
                         console.error("Failed to initialize merchant wallet:", error);
                         toast.error(
                                 "Failed to initialize payment system. Please try again later."
                         );
+                        throw error;
                 }
         }
 
