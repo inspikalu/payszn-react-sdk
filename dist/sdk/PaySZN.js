@@ -75,7 +75,7 @@ var PaySZN = /*#__PURE__*/function () {
     key: "initializeMerchantWallet",
     value: function initializeMerchantWallet(apiKey) {
       return __awaiter(this, void 0, void 0, /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var response, MERCHANT_WALLET_ADDRESS;
+        var response, MERCHANT_WALLET_ADDRESS, merchantATA;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -95,19 +95,21 @@ var PaySZN = /*#__PURE__*/function () {
               _context.next = 10;
               return TokenService_1["default"].getUSDCATA(MERCHANT_WALLET_ADDRESS);
             case 10:
-              this.merchantEmbeddedATA = _context.sent;
-              _context.next = 17;
+              merchantATA = _context.sent;
+              this.merchantEmbeddedATA = merchantATA;
+              console.log("Merchant ata:", merchantATA);
+              _context.next = 19;
               break;
-            case 13:
-              _context.prev = 13;
+            case 15:
+              _context.prev = 15;
               _context.t0 = _context["catch"](0);
               console.error("Failed to initialize merchant wallet:", _context.t0);
               sonner_1.toast.error("Failed to initialize payment system. Please try again later.");
-            case 17:
+            case 19:
             case "end":
               return _context.stop();
           }
-        }, _callee, this, [[0, 13]]);
+        }, _callee, this, [[0, 15]]);
       }));
     }
     /**

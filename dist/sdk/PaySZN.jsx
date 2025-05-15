@@ -45,7 +45,9 @@ class PaySZN {
                     throw new Error("Failed to fetch merchant wallet address check api key");
                 }
                 this.merchantWallet = MERCHANT_WALLET_ADDRESS;
-                this.merchantEmbeddedATA = yield TokenService_1.default.getUSDCATA(MERCHANT_WALLET_ADDRESS);
+                const merchantATA = yield TokenService_1.default.getUSDCATA(MERCHANT_WALLET_ADDRESS);
+                this.merchantEmbeddedATA = merchantATA;
+                console.log("Merchant ata:", merchantATA);
             }
             catch (error) {
                 console.error("Failed to initialize merchant wallet:", error);
