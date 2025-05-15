@@ -99,7 +99,6 @@ class JupiterService {
       if (response.status >= 200 && response.status < 300) {
         return { success: true, data: response.data };
       }
-      console.log("Swap Quote Respose: ", response);
 
       return {
         success: false,
@@ -136,8 +135,6 @@ class JupiterService {
       throw new Error("Wallet public key is required");
     }
 
-    console.log("Destination Token account: ", destinationTokenAccount);
-
     // Merge user options with defaults
     const mergedOptions = { ...DEFAULT_SWAP_OPTIONS, ...options };
 
@@ -156,7 +153,6 @@ class JupiterService {
       requestBody.prioritizationFeeLamports = mergedOptions.prioritizationFee;
     }
 
-    console.log("Request Body for swap execution response: ", requestBody);
     try {
       const response = await axios.post(
         // `${JUPITER_API_BASE_URL}/swap/v1/swap`,
@@ -169,10 +165,8 @@ class JupiterService {
         },
       );
 
-      console.log("Swap Execution Response: ", response);
       return response.data as SwapExecutionResponse;
     } catch (error) {
-      console.log("JupiterService error: ", error);
       if (axios.isAxiosError(error) && error.response) {
         throw new Error(
           `Swap failed with status ${error.response.status}: ${

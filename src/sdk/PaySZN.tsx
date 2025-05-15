@@ -14,9 +14,38 @@ import TransactionService from "./services/TransactionService";
 import { API_BASE_URL, DEFAULT_SLIPPAGE_BPS } from "./services/constants";
 import { toLamports } from "./utils/conversion";
 import axios from "axios";
-import { toast } from "sonner"; // Import toast from sonner
-import { Connection, clusterApiUrl, PublicKey, } from "@solana/web3.js";
-import { getAccount, TokenAccountNotFoundError, TokenInvalidAccountOwnerError } from "@solana/spl-token"
+import { toast } from "sonner";
+import { Connection, clusterApiUrl, PublicKey } from "@solana/web3.js";
+import { getAccount, TokenAccountNotFoundError, TokenInvalidAccountOwnerError } from "@solana/spl-token";
+
+// Custom error class for categorized error handling
+class PaySZNError extends Error {
+        constructor(
+                public type: "UserError" | "NetworkError" | "APIError" | "SystemError",
+                message: string
+        ) {
+                super(message);
+                this.name = "PaySZNError";
+        }
+}
+
+const logger = {
+        log: (...args: any[]) => {
+                if (process.env.NODE_ENV === "development") {
+                        console.log(...args);
+                }
+        },
+        warn: (...args: any[]) => {
+                if (process.env.NODE_ENV === "development") {
+                        console.warn(...args);
+                }
+        },
+        error: (...args: any[]) => {
+                if (process.env.NODE_ENV === "development") {
+                        console.error(...args);
+                }
+        },
+};
 
 /**
  * PaySZN handles cryptocurrency payment processing with Jupiter swap integration
@@ -33,6 +62,10 @@ class PaySZN {
         private merchantWallet = "";
 
         constructor({ apiKey, setShowModal, setPaymentIntent }: PaySZNProps) {
+                // Validate apiKey format (basic check, adjust as needed)
+                if (!apiKey || typeof apiKey !== "string" || apiKey.length < 10) {
+                        throw new PaySZNError("UserError", "Invalid API key provided");
+                }
                 this.apiKey = apiKey;
                 this.setShowModal = setShowModal;
                 this.setPaymentIntent = setPaymentIntent;
@@ -40,66 +73,73 @@ class PaySZN {
         }
 
         private async initializeMerchantWallet(apiKey: string): Promise<void> {
-                try {
-                        const response = await axios.get(
-                                `${API_BASE_URL}/payment-gateway/wallet?api_key=${apiKey}`
-                        );
-                        const MERCHANT_WALLET_ADDRESS = response.data.wallet;
-                        console.log("Fetched Merchant Wallet Address:", MERCHANT_WALLET_ADDRESS);
-                        if (!MERCHANT_WALLET_ADDRESS) {
-                                throw new Error("Failed to fetch merchant wallet address, check API key");
-                        }
-                        try {
-                                new PublicKey(MERCHANT_WALLET_ADDRESS);
-                                console.log("Merchant wallet address is valid:", MERCHANT_WALLET_ADDRESS);
-                        } catch (error) {
-                                console.error("Invalid merchant wallet address:", MERCHANT_WALLET_ADDRESS, error);
-                                throw new Error("Invalid merchant wallet address");
-                        }
-                        this.merchantWallet = MERCHANT_WALLET_ADDRESS;
+                // Retry configuration for API calls
+                const maxRetries = 3;
+                const retryDelay = 1000;
 
-                        // Get merchant's USDC ATA
-                        const merchantATA = await TokenService.getUSDCATA(MERCHANT_WALLET_ADDRESS);
-                        this.merchantEmbeddedATA = merchantATA;
-                        console.log("Merchant USDC ATA:", merchantATA);
-
-                        // Confirm the ATA exists on-chain
-                        const connection = new Connection(clusterApiUrl("mainnet-beta"));
+                for (let attempt = 1; attempt <= maxRetries; attempt++) {
                         try {
-                                const ataAccount = await getAccount(
-                                        connection,
-                                        new PublicKey(merchantATA)
+                                const response = await axios.get(
+                                        `${API_BASE_URL}/payment-gateway/wallet?api_key=${apiKey}`,
+                                        { timeout: 5000 } // 5-second timeout
                                 );
-                                console.log("Merchant USDC ATA confirmed on-chain:", {
-                                        address: merchantATA,
-                                        mint: ataAccount.mint.toBase58(),
-                                        owner: ataAccount.owner.toBase58(),
-                                        amount: ataAccount.amount.toString(),
-                                });
-                        } catch (error) {
-                                if (
-                                        error instanceof TokenAccountNotFoundError ||
-                                        error instanceof TokenInvalidAccountOwnerError
-                                ) {
-                                        console.warn(
-                                                "Merchant USDC ATA does not exist on-chain:",
-                                                merchantATA,
-                                                "The merchant must create this ATA before receiving payments."
-                                        );
-                                        toast.error(
-                                                "Merchant USDC account not found. Please ensure the merchant has created their USDC token account."
-                                        );
-                                } else {
-                                        console.error("Error verifying merchant USDC ATA:", error);
-                                        throw new Error(`Failed to verify merchant USDC ATA: ${error instanceof Error ? error.message : String(error)}`);
+
+                                const MERCHANT_WALLET_ADDRESS = response.data?.wallet;
+                                if (!MERCHANT_WALLET_ADDRESS) {
+                                        throw new PaySZNError("APIError", "Merchant wallet address not provided by API");
                                 }
+
+                                // Validate wallet address
+                                try {
+                                        new PublicKey(MERCHANT_WALLET_ADDRESS);
+                                        logger.log("Merchant wallet initialized successfully");
+                                } catch (error) {
+                                        console.warn(error)
+                                        throw new PaySZNError("APIError", "Invalid merchant wallet address returned by API");
+                                }
+
+                                this.merchantWallet = MERCHANT_WALLET_ADDRESS;
+
+                                // Get merchant's USDC ATA
+                                const merchantATA = await TokenService.getUSDCATA(MERCHANT_WALLET_ADDRESS);
+                                this.merchantEmbeddedATA = merchantATA;
+                                logger.log("Merchant USDC ATA computed");
+
+                                // Confirm the ATA exists on-chain
+                                const connection = new Connection(clusterApiUrl("mainnet-beta"));
+                                try {
+                                        await getAccount(connection, new PublicKey(merchantATA));
+                                        logger.log("Merchant USDC ATA verified on-chain");
+                                } catch (error) {
+                                        if (error instanceof TokenAccountNotFoundError || error instanceof TokenInvalidAccountOwnerError) {
+                                                logger.warn("Merchant USDC ATA does not exist on-chain");
+                                                toast.error(
+                                                        "Merchant USDC account not found. Please create a USDC token account in your wallet."
+                                                );
+                                                throw new PaySZNError(
+                                                        "UserError",
+                                                        "Merchant USDC account not initialized. Please create it in your wallet."
+                                                );
+                                        }
+                                        throw new PaySZNError("SystemError", "Failed to verify merchant USDC account");
+                                }
+
+                                return; // Success, exit retry loop
+                        } catch (error) {
+                                if (attempt === maxRetries) {
+                                        const message =
+                                                error instanceof PaySZNError
+                                                        ? error.message
+                                                        : "Failed to initialize merchant wallet. Please try again later.";
+                                        logger.error("Merchant wallet initialization failed after retries");
+                                        toast.error(message);
+                                        throw new PaySZNError(
+                                                error instanceof PaySZNError ? error.type : "NetworkError",
+                                                message
+                                        );
+                                }
+                                await new Promise((resolve) => setTimeout(resolve, retryDelay));
                         }
-                } catch (error) {
-                        console.error("Failed to initialize merchant wallet:", error);
-                        toast.error(
-                                "Failed to initialize payment system. Please try again later."
-                        );
-                        throw error;
                 }
         }
 
@@ -108,9 +148,9 @@ class PaySZN {
          * @param value - Slippage percentage in basis points
          */
         public setSlippage(value: number): void {
-                if (value < 0) {
-                        toast.error("Slippage must be a non-negative value");
-                        throw new Error("Slippage must be a non-negative value");
+                if (value < 0 || !Number.isFinite(value)) {
+                        toast.error("Slippage must be a non-negative number");
+                        throw new PaySZNError("UserError", "Slippage must be a non-negative number");
                 }
                 this.slippage = value;
                 toast.success(`Slippage set to ${value} basis points`);
@@ -122,15 +162,15 @@ class PaySZN {
          * @returns The created payment intent
          */
         public async createPaymentIntent(amount: number): Promise<PaymentIntent> {
-                if (amount <= 0) {
+                if (amount <= 0 || !Number.isFinite(amount)) {
                         toast.error("Please provide an amount greater than zero");
-                        throw new Error("Please provide an amount greater than zero");
+                        throw new PaySZNError("UserError", "Payment amount must be greater than zero");
                 }
 
                 this.paymentAmount = amount;
                 const intent: PaymentIntent = { id: "mock-intent-id", amount };
                 this.setPaymentIntent(intent);
-                toast.success(`Payment intent created for ${amount}`);
+                toast.success(`Payment intent created for ${amount} USDC`);
 
                 return intent;
         }
@@ -140,9 +180,7 @@ class PaySZN {
          * @returns React component for the payment button
          */
         public renderPaymentButton(): React.ReactElement {
-                return (
-                        <SDKPaymentButton onClick={this.handlePaymentButtonClick.bind(this)} />
-                );
+                return <SDKPaymentButton onClick={this.handlePaymentButtonClick.bind(this)} />;
         }
 
         /**
@@ -179,24 +217,23 @@ class PaySZN {
 
                         const response = await axios.post(
                                 `${API_BASE_URL}/payment-gateway/process`,
+                                { signature, expectedReceiver },
                                 {
-                                        signature,
-                                        expectedReceiver,
-                                },
-                                {
-                                        headers: {
-                                                Authorization: `Bearer ${this.apiKey}`,
-                                        },
+                                        headers: { Authorization: `Bearer ${this.apiKey}` },
+                                        timeout: 10000, // 10-second timeout
                                 }
                         );
 
                         toast.success("Payment confirmed on the blockchain!", { id: toastId });
-                        toast.dismiss(toastId);
                         return response.data;
                 } catch (error) {
-                        console.log("Error Processing payment: ", error);
-                        toast.error("Failed to process payment. Please try again.");
-                        throw error;
+                        logger.error("Payment processing failed");
+                        const message = "Failed to process payment. Please try again.";
+                        toast.error(message);
+                        throw new PaySZNError(
+                                axios.isAxiosError(error) ? "NetworkError" : "APIError",
+                                message
+                        );
                 }
         }
 
@@ -205,39 +242,40 @@ class PaySZN {
          * @param data - Payment submission data
          * @returns Result of the payment operation
          */
-        public async handleSubmitPaymentModal(
-                data: PaymentSubmissionData
-        ): Promise<string> {
+        public async handleSubmitPaymentModal(data: PaymentSubmissionData): Promise<string> {
                 if (this.paymentAmount <= 0) {
                         toast.error("Please provide an amount greater than zero");
-                        throw new Error("Please provide an amount greater than zero");
+                        throw new PaySZNError("UserError", "Payment amount must be greater than zero");
                 }
 
-                // Main processing toast ID
                 const mainToastId = toast.loading("Preparing payment...");
 
                 try {
+                        // Validate wallet address and token mint
+                        try {
+                                new PublicKey(data.walletAddress);
+                                new PublicKey(data.fromToken.mint);
+                        } catch (error) {
+                                console.warn(error)
+                                toast.error("Invalid wallet address or token mint");
+                                throw new PaySZNError("UserError", "Invalid wallet address or token mint");
+                        }
+
                         // Verify token is on Jupiter
                         toast.loading("Verifying token availability...", { id: mainToastId });
-                        const tokenCheckResult = await JupiterService.checkTokenAvailability(
-                                data.fromToken.mint
-                        );
-
+                        const tokenCheckResult = await JupiterService.checkTokenAvailability(data.fromToken.mint);
                         if (!tokenCheckResult.success) {
-                                const errorMsg = `Token not available on Jupiter: ${tokenCheckResult.error}`;
+                                const errorMsg = `Token not supported for swap`;
                                 toast.error(errorMsg, { id: mainToastId });
-                                throw new Error(errorMsg);
+                                throw new PaySZNError("UserError", errorMsg);
                         }
 
                         // Get the price of the user's token in USDC
                         toast.loading("Fetching token price...", { id: mainToastId });
-                        const userTokenPriceUSDC = await JupiterService.getTokenPriceInUSDC(
-                                data.fromToken.mint
-                        );
-
+                        const userTokenPriceUSDC = await JupiterService.getTokenPriceInUSDC(data.fromToken.mint);
                         if (!userTokenPriceUSDC) {
                                 toast.error("Unable to fetch token price", { id: mainToastId });
-                                throw new Error("Unable to fetch user token price");
+                                throw new PaySZNError("APIError", "Unable to fetch token price");
                         }
 
                         // Calculate required amount of user tokens
@@ -246,34 +284,24 @@ class PaySZN {
                                 userTokenPriceUSDC
                         );
 
-                        const userUsdcATA = await TokenService.getUSDCATA(data.walletAddress);
-                        console.log("User's USDC ATA:", userUsdcATA);
-
-                        // Log merchant's USDC ATA
-                        console.log("Merchant's USDC ATA:", this.merchantEmbeddedATA);
-
                         // Validate merchant's ATA
                         if (!this.merchantEmbeddedATA) {
-                                const errorMsg = "Merchant USDC ATA not initialized";
-                                toast.error(errorMsg, { id: mainToastId });
-                                throw new Error(errorMsg);
+                                toast.error("Merchant payment account not initialized");
+                                throw new PaySZNError("SystemError", "Merchant USDC account not initialized");
                         }
 
                         // Get swap quote
                         toast.loading("Getting swap quote...", { id: mainToastId });
                         const quoteResult = await JupiterService.getSwapQuote(
                                 data.fromToken.mint,
-                                toLamports(
-                                        requiredUserTokenAmount,
-                                        tokenCheckResult.data?.decimals || 9
-                                ),
+                                toLamports(requiredUserTokenAmount, tokenCheckResult.data?.decimals || 9),
                                 this.slippage
                         );
 
                         if (!quoteResult.success) {
-                                const errorMsg = `Failed to get swap quote: ${quoteResult.error}`;
+                                const errorMsg = `Failed to get swap quote`;
                                 toast.error(errorMsg, { id: mainToastId });
-                                throw new Error(errorMsg);
+                                throw new PaySZNError("APIError", errorMsg);
                         }
 
                         // Execute the swap
@@ -283,17 +311,23 @@ class PaySZN {
                                 data.walletAddress,
                                 this.merchantEmbeddedATA
                         );
-                        console.log("Swap instruction: ", swapInstruction);
+                        logger.log("Swap instruction prepared");
 
                         // Sign the transaction
                         toast.loading("Waiting for wallet confirmation...", { id: mainToastId });
-                        const transactionSignature =
-                                await TransactionService.signAndSendTransaction(
+                        let transactionSignature: string;
+                        try {
+                                transactionSignature = await TransactionService.signAndSendTransaction(
                                         swapInstruction.swapTransaction,
                                         data.wallet as unknown as TransactionSigner
                                 );
+                        } catch (error) {
+								console.warn(error)
+                                toast.error("Transaction rejected or failed to sign", { id: mainToastId });
+                                throw new PaySZNError("UserError", "Transaction rejected or failed to sign");
+                        }
 
-                        console.log("Transaction Signature: ", transactionSignature);
+                        logger.log("Transaction submitted");
 
                         // Confirm transaction
                         toast.loading("Confirming transaction...", { id: mainToastId });
@@ -308,30 +342,25 @@ class PaySZN {
                         toast.success("Payment successfully completed!", { id: mainToastId });
 
                         // Check if callbackUrl exists and redirect the user
-                        if (processPaymentResponse && processPaymentResponse.callbackUrl) {
+                        if (processPaymentResponse?.callbackUrl) {
                                 toast.success("Redirecting to merchant site...");
-
-                                // Close the modal first
                                 this.handleCloseModal();
-
-                                // Small delay to allow toast to be seen
                                 setTimeout(() => {
-                                        // Redirect to the callback URL
                                         window.location.href = processPaymentResponse.callbackUrl;
                                 }, 1000);
                         }
 
                         return transactionSignature;
                 } catch (error) {
-                        console.log("The main error is: ", error)
                         const errorMessage =
-                                error instanceof Error ? error.message : String(error);
-                        console.error("Payment submission failed:", errorMessage);
-
-                        // Show error toast
-                        toast.error(`Payment failed: ${errorMessage}`, { id: mainToastId });
-
-                        throw error;
+                                error instanceof PaySZNError
+                                        ? error.message
+                                        : "Payment failed. Please try again.";
+                        logger.error("Payment submission failed");
+                        toast.error(errorMessage, { id: mainToastId });
+                        throw error instanceof PaySZNError
+                                ? error
+                                : new PaySZNError("SystemError", errorMessage);
                 }
         }
 }
