@@ -22,6 +22,8 @@ const constants_1 = require("./services/constants");
 const conversion_1 = require("./utils/conversion");
 const axios_1 = __importDefault(require("axios"));
 const sonner_1 = require("sonner"); // Import toast from sonner
+const web3_js_1 = require("@solana/web3.js");
+const spl_token_1 = require("@solana/spl-token");
 /**
  * PaySZN handles cryptocurrency payment processing with Jupiter swap integration
  */
@@ -42,16 +44,40 @@ class PaySZN {
                 const response = yield axios_1.default.get(`${constants_1.API_BASE_URL}/payment-gateway/wallet?api_key=${apiKey}`);
                 const MERCHANT_WALLET_ADDRESS = response.data.wallet;
                 if (!MERCHANT_WALLET_ADDRESS) {
-                    throw new Error("Failed to fetch merchant wallet address check api key");
+                    throw new Error("Failed to fetch merchant wallet address, check API key");
                 }
                 this.merchantWallet = MERCHANT_WALLET_ADDRESS;
+                // Get merchant's USDC ATA
                 const merchantATA = yield TokenService_1.default.getUSDCATA(MERCHANT_WALLET_ADDRESS);
                 this.merchantEmbeddedATA = merchantATA;
-                console.log("Merchant ata:", merchantATA);
+                console.log("Merchant USDC ATA:", merchantATA);
+                // Confirm the ATA exists on-chain
+                const connection = new web3_js_1.Connection((0, web3_js_1.clusterApiUrl)("mainnet-beta"));
+                try {
+                    const ataAccount = yield (0, spl_token_1.getAccount)(connection, new web3_js_1.PublicKey(merchantATA));
+                    console.log("Merchant USDC ATA confirmed on-chain:", {
+                        address: merchantATA,
+                        mint: ataAccount.mint.toBase58(),
+                        owner: ataAccount.owner.toBase58(),
+                        amount: ataAccount.amount.toString(),
+                    });
+                }
+                catch (error) {
+                    if (error instanceof spl_token_1.TokenAccountNotFoundError ||
+                        error instanceof spl_token_1.TokenInvalidAccountOwnerError) {
+                        console.warn("Merchant USDC ATA does not exist on-chain:", merchantATA, "The merchant must create this ATA before receiving payments.");
+                        sonner_1.toast.error("Merchant USDC account not found. Please ensure the merchant has created their USDC token account.");
+                    }
+                    else {
+                        console.error("Error verifying merchant USDC ATA:", error);
+                        throw new Error(`Failed to verify merchant USDC ATA: ${error instanceof Error ? error.message : String(error)}`);
+                    }
+                }
             }
             catch (error) {
                 console.error("Failed to initialize merchant wallet:", error);
                 sonner_1.toast.error("Failed to initialize payment system. Please try again later.");
+                throw error;
             }
         });
     }
@@ -166,6 +192,8 @@ class PaySZN {
                 }
                 // Calculate required amount of user tokens
                 const requiredUserTokenAmount = TokenService_1.default.calculateRequiredTokenAmount(this.paymentAmount, userTokenPriceUSDC);
+                const userUsdcATA = yield TokenService_1.default.getUSDCATA(data.walletAddress);
+                console.log("User's USDC ATA:", userUsdcATA);
                 // Get swap quote
                 sonner_1.toast.loading("Getting swap quote...", { id: mainToastId });
                 const quoteResult = yield JupiterService_1.default.getSwapQuote(data.fromToken.mint, (0, conversion_1.toLamports)(requiredUserTokenAmount, ((_a = tokenCheckResult.data) === null || _a === void 0 ? void 0 : _a.decimals) || 9), this.slippage);
