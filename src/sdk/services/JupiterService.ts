@@ -171,6 +171,7 @@ class JupiterService {
       console.log("Swap Execution Response: ", response);
       return response.data as SwapExecutionResponse;
     } catch (error) {
+      console.log("JupiterService error: ", error);
       if (axios.isAxiosError(error) && error.response) {
         throw new Error(
           `Swap failed with status ${error.response.status}: ${
