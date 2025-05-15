@@ -45,6 +45,7 @@ class PaySZN {
                                 `${API_BASE_URL}/payment-gateway/wallet?api_key=${apiKey}`
                         );
                         const MERCHANT_WALLET_ADDRESS = response.data.wallet;
+						console.log("Fetched Merchant Wallet Address:", MERCHANT_WALLET_ADDRESS);
                         if (!MERCHANT_WALLET_ADDRESS) {
                                 throw new Error("Failed to fetch merchant wallet address, check API key");
                         }
