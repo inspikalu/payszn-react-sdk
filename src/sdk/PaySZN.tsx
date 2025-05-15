@@ -267,6 +267,7 @@ class PaySZN {
 
       return transactionSignature;
     } catch (error) {
+			console.log("The main error is: ", error)
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       console.error("Payment submission failed:", errorMessage);

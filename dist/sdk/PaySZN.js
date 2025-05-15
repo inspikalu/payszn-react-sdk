@@ -361,6 +361,7 @@ var PaySZN = /*#__PURE__*/function () {
             case 48:
               _context4.prev = 48;
               _context4.t0 = _context4["catch"](4);
+              console.log("The main error is: ", _context4.t0);
               errorMessage = _context4.t0 instanceof Error ? _context4.t0.message : String(_context4.t0);
               console.error("Payment submission failed:", errorMessage);
               // Show error toast
@@ -368,7 +369,7 @@ var PaySZN = /*#__PURE__*/function () {
                 id: mainToastId
               });
               throw _context4.t0;
-            case 54:
+            case 55:
             case "end":
               return _context4.stop();
           }
