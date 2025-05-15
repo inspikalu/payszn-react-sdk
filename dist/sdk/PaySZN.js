@@ -283,7 +283,7 @@ var PaySZN = /*#__PURE__*/function () {
     key: "handleSubmitPaymentModal",
     value: function handleSubmitPaymentModal(data) {
       return __awaiter(this, void 0, void 0, /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-        var _a, mainToastId, tokenCheckResult, errorMsg, userTokenPriceUSDC, requiredUserTokenAmount, userUsdcATA, quoteResult, _errorMsg, swapInstruction, transactionSignature, processPaymentResponse, errorMessage;
+        var _a, mainToastId, tokenCheckResult, errorMsg, userTokenPriceUSDC, requiredUserTokenAmount, userUsdcATA, _errorMsg, quoteResult, _errorMsg2, swapInstruction, transactionSignature, processPaymentResponse, errorMessage;
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
@@ -339,40 +339,53 @@ var PaySZN = /*#__PURE__*/function () {
             case 23:
               userUsdcATA = _context4.sent;
               console.log("User's USDC ATA:", userUsdcATA);
-              // Get swap quote
-              sonner_1.toast.loading("Getting swap quote...", {
-                id: mainToastId
-              });
-              _context4.next = 28;
-              return JupiterService_1["default"].getSwapQuote(data.fromToken.mint, (0, conversion_1.toLamports)(requiredUserTokenAmount, ((_a = tokenCheckResult.data) === null || _a === void 0 ? void 0 : _a.decimals) || 9), this.slippage);
-            case 28:
-              quoteResult = _context4.sent;
-              if (quoteResult.success) {
-                _context4.next = 33;
+              // Log merchant's USDC ATA
+              console.log("Merchant's USDC ATA:", this.merchantEmbeddedATA);
+              // Validate merchant's ATA
+              if (this.merchantEmbeddedATA) {
+                _context4.next = 30;
                 break;
               }
-              _errorMsg = "Failed to get swap quote: ".concat(quoteResult.error);
+              _errorMsg = "Merchant USDC ATA not initialized";
               sonner_1.toast.error(_errorMsg, {
                 id: mainToastId
               });
               throw new Error(_errorMsg);
+            case 30:
+              // Get swap quote
+              sonner_1.toast.loading("Getting swap quote...", {
+                id: mainToastId
+              });
+              _context4.next = 33;
+              return JupiterService_1["default"].getSwapQuote(data.fromToken.mint, (0, conversion_1.toLamports)(requiredUserTokenAmount, ((_a = tokenCheckResult.data) === null || _a === void 0 ? void 0 : _a.decimals) || 9), this.slippage);
             case 33:
+              quoteResult = _context4.sent;
+              if (quoteResult.success) {
+                _context4.next = 38;
+                break;
+              }
+              _errorMsg2 = "Failed to get swap quote: ".concat(quoteResult.error);
+              sonner_1.toast.error(_errorMsg2, {
+                id: mainToastId
+              });
+              throw new Error(_errorMsg2);
+            case 38:
               // Execute the swap
               sonner_1.toast.loading("Preparing transaction...", {
                 id: mainToastId
               });
-              _context4.next = 36;
+              _context4.next = 41;
               return JupiterService_1["default"].getSwapInstruction(quoteResult.data, data.walletAddress, this.merchantEmbeddedATA);
-            case 36:
+            case 41:
               swapInstruction = _context4.sent;
               console.log("Swap instruction: ", swapInstruction);
               // Sign the transaction
               sonner_1.toast.loading("Waiting for wallet confirmation...", {
                 id: mainToastId
               });
-              _context4.next = 41;
+              _context4.next = 46;
               return TransactionService_1["default"].signAndSendTransaction(swapInstruction.swapTransaction, data.wallet);
-            case 41:
+            case 46:
               transactionSignature = _context4.sent;
               console.log("Transaction Signature: ", transactionSignature);
               // Confirm transaction
@@ -380,9 +393,9 @@ var PaySZN = /*#__PURE__*/function () {
                 id: mainToastId
               });
               // Send to backend for processing
-              _context4.next = 46;
+              _context4.next = 51;
               return this.processPayment(transactionSignature, this.merchantWallet);
-            case 46:
+            case 51:
               processPaymentResponse = _context4.sent;
               // Success toast
               sonner_1.toast.success("Payment successfully completed!", {
@@ -400,8 +413,8 @@ var PaySZN = /*#__PURE__*/function () {
                 }, 1000);
               }
               return _context4.abrupt("return", transactionSignature);
-            case 52:
-              _context4.prev = 52;
+            case 57:
+              _context4.prev = 57;
               _context4.t0 = _context4["catch"](4);
               console.log("The main error is: ", _context4.t0);
               errorMessage = _context4.t0 instanceof Error ? _context4.t0.message : String(_context4.t0);
@@ -411,11 +424,11 @@ var PaySZN = /*#__PURE__*/function () {
                 id: mainToastId
               });
               throw _context4.t0;
-            case 59:
+            case 64:
             case "end":
               return _context4.stop();
           }
-        }, _callee4, this, [[4, 52]]);
+        }, _callee4, this, [[4, 57]]);
       }));
     }
   }]);

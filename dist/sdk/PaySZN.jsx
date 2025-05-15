@@ -194,6 +194,14 @@ class PaySZN {
                 const requiredUserTokenAmount = TokenService_1.default.calculateRequiredTokenAmount(this.paymentAmount, userTokenPriceUSDC);
                 const userUsdcATA = yield TokenService_1.default.getUSDCATA(data.walletAddress);
                 console.log("User's USDC ATA:", userUsdcATA);
+                // Log merchant's USDC ATA
+                console.log("Merchant's USDC ATA:", this.merchantEmbeddedATA);
+                // Validate merchant's ATA
+                if (!this.merchantEmbeddedATA) {
+                    const errorMsg = "Merchant USDC ATA not initialized";
+                    sonner_1.toast.error(errorMsg, { id: mainToastId });
+                    throw new Error(errorMsg);
+                }
                 // Get swap quote
                 sonner_1.toast.loading("Getting swap quote...", { id: mainToastId });
                 const quoteResult = yield JupiterService_1.default.getSwapQuote(data.fromToken.mint, (0, conversion_1.toLamports)(requiredUserTokenAmount, ((_a = tokenCheckResult.data) === null || _a === void 0 ? void 0 : _a.decimals) || 9), this.slippage);
