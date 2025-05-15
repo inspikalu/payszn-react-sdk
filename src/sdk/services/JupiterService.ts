@@ -156,6 +156,7 @@ class JupiterService {
       requestBody.prioritizationFeeLamports = mergedOptions.prioritizationFee;
     }
 
+    console.log("Request Body for swap execution response: ", requestBody);
     try {
       const response = await axios.post(
         `${JUPITER_API_BASE_URL}/swap/v1/swap`,

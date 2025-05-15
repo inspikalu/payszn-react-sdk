@@ -567,32 +567,33 @@ var JupiterService = /*#__PURE__*/function () {
               if (mergedOptions.prioritizationFee) {
                 requestBody.prioritizationFeeLamports = mergedOptions.prioritizationFee;
               }
-              _context4.prev = 8;
-              _context4.next = 11;
+              console.log("Request Body for swap execution response: ", requestBody);
+              _context4.prev = 9;
+              _context4.next = 12;
               return axios_1["default"].post("".concat(constants_1.JUPITER_API_BASE_URL, "/swap/v1/swap"), requestBody, {
                 headers: {
                   "Content-Type": "application/json"
                 }
               });
-            case 11:
+            case 12:
               response = _context4.sent;
               console.log("Swap Execution Response: ", response);
               return _context4.abrupt("return", response.data);
-            case 16:
-              _context4.prev = 16;
-              _context4.t0 = _context4["catch"](8);
+            case 17:
+              _context4.prev = 17;
+              _context4.t0 = _context4["catch"](9);
               if (!(axios_1["default"].isAxiosError(_context4.t0) && _context4.t0.response)) {
-                _context4.next = 20;
+                _context4.next = 21;
                 break;
               }
               throw new Error("Swap failed with status ".concat(_context4.t0.response.status, ": ").concat(_context4.t0.response.data ? JSON.stringify(_context4.t0.response.data) : "Unknown error"));
-            case 20:
-              throw _context4.t0;
             case 21:
+              throw _context4.t0;
+            case 22:
             case "end":
               return _context4.stop();
           }
-        }, _callee4, null, [[8, 16]]);
+        }, _callee4, null, [[9, 17]]);
       }));
     }
   }]);
