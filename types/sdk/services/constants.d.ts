@@ -30,4 +30,4 @@ export declare const DEFAULT_SWAP_OPTIONS: {
 /**
  * Backend API endpoints
  */
-export declare const API_BASE_URL = "https://payszn-backend.onrender.com";
+export declare const API_BASE_URL = "https://payszn-backend-civic.onrender.com";

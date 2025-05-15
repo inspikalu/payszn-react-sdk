@@ -2,7 +2,8 @@
  * API endpoints and configuration constants
  */
 export const JUPITER_API_BASE_URL = "https://api.jup.ag";
-export const RPC_URL = "https://mainnet.helius-rpc.com/?api-key=8dabc2e1-a043-4c0a-a675-52273c7ac948";
+export const RPC_URL =
+  "https://mainnet.helius-rpc.com/?api-key=8dabc2e1-a043-4c0a-a675-52273c7ac948";
 
 /**
  * Token constants
@@ -25,17 +26,18 @@ export const DEFAULT_SLIPPAGE_BPS = 50; // Default slippage percentage in basis 
  * Default swap options
  */
 export const DEFAULT_SWAP_OPTIONS = {
-    dynamicComputeUnitLimit: true,
-    dynamicSlippage: true,
-    prioritizationFee: {
-        priorityLevelWithMaxLamports: {
-            maxLamports: 1000000,
-            priorityLevel: "veryHigh",
-        },
+  dynamicComputeUnitLimit: true,
+  dynamicSlippage: true,
+  prioritizationFee: {
+    priorityLevelWithMaxLamports: {
+      maxLamports: 1000000,
+      priorityLevel: "veryHigh",
     },
+  },
 };
 
 /**
  * Backend API endpoints
  */
-export const API_BASE_URL = "https://payszn-backend.onrender.com";
+// export const API_BASE_URL = "https://payszn-backend.onrender.com";
+export const API_BASE_URL = "https://payszn-backend-civic.onrender.com";
