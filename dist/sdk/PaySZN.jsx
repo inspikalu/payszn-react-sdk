@@ -43,8 +43,17 @@ class PaySZN {
             try {
                 const response = yield axios_1.default.get(`${constants_1.API_BASE_URL}/payment-gateway/wallet?api_key=${apiKey}`);
                 const MERCHANT_WALLET_ADDRESS = response.data.wallet;
+                console.log("Fetched Merchant Wallet Address:", MERCHANT_WALLET_ADDRESS);
                 if (!MERCHANT_WALLET_ADDRESS) {
                     throw new Error("Failed to fetch merchant wallet address, check API key");
+                }
+                try {
+                    new web3_js_1.PublicKey(MERCHANT_WALLET_ADDRESS);
+                    console.log("Merchant wallet address is valid:", MERCHANT_WALLET_ADDRESS);
+                }
+                catch (error) {
+                    console.error("Invalid merchant wallet address:", MERCHANT_WALLET_ADDRESS, error);
+                    throw new Error("Invalid merchant wallet address");
                 }
                 this.merchantWallet = MERCHANT_WALLET_ADDRESS;
                 // Get merchant's USDC ATA

@@ -87,26 +87,38 @@ var PaySZN = /*#__PURE__*/function () {
             case 3:
               response = _context.sent;
               MERCHANT_WALLET_ADDRESS = response.data.wallet;
+              console.log("Fetched Merchant Wallet Address:", MERCHANT_WALLET_ADDRESS);
               if (MERCHANT_WALLET_ADDRESS) {
-                _context.next = 7;
+                _context.next = 8;
                 break;
               }
               throw new Error("Failed to fetch merchant wallet address, check API key");
-            case 7:
+            case 8:
+              _context.prev = 8;
+              new web3_js_1.PublicKey(MERCHANT_WALLET_ADDRESS);
+              console.log("Merchant wallet address is valid:", MERCHANT_WALLET_ADDRESS);
+              _context.next = 17;
+              break;
+            case 13:
+              _context.prev = 13;
+              _context.t0 = _context["catch"](8);
+              console.error("Invalid merchant wallet address:", MERCHANT_WALLET_ADDRESS, _context.t0);
+              throw new Error("Invalid merchant wallet address");
+            case 17:
               this.merchantWallet = MERCHANT_WALLET_ADDRESS;
               // Get merchant's USDC ATA
-              _context.next = 10;
+              _context.next = 20;
               return TokenService_1["default"].getUSDCATA(MERCHANT_WALLET_ADDRESS);
-            case 10:
+            case 20:
               merchantATA = _context.sent;
               this.merchantEmbeddedATA = merchantATA;
               console.log("Merchant USDC ATA:", merchantATA);
               // Confirm the ATA exists on-chain
               connection = new web3_js_1.Connection((0, web3_js_1.clusterApiUrl)("mainnet-beta"));
-              _context.prev = 14;
-              _context.next = 17;
+              _context.prev = 24;
+              _context.next = 27;
               return (0, spl_token_1.getAccount)(connection, new web3_js_1.PublicKey(merchantATA));
-            case 17:
+            case 27:
               ataAccount = _context.sent;
               console.log("Merchant USDC ATA confirmed on-chain:", {
                 address: merchantATA,
@@ -114,36 +126,36 @@ var PaySZN = /*#__PURE__*/function () {
                 owner: ataAccount.owner.toBase58(),
                 amount: ataAccount.amount.toString()
               });
-              _context.next = 30;
+              _context.next = 40;
               break;
-            case 21:
-              _context.prev = 21;
-              _context.t0 = _context["catch"](14);
-              if (!(_context.t0 instanceof spl_token_1.TokenAccountNotFoundError || _context.t0 instanceof spl_token_1.TokenInvalidAccountOwnerError)) {
-                _context.next = 28;
+            case 31:
+              _context.prev = 31;
+              _context.t1 = _context["catch"](24);
+              if (!(_context.t1 instanceof spl_token_1.TokenAccountNotFoundError || _context.t1 instanceof spl_token_1.TokenInvalidAccountOwnerError)) {
+                _context.next = 38;
                 break;
               }
               console.warn("Merchant USDC ATA does not exist on-chain:", merchantATA, "The merchant must create this ATA before receiving payments.");
               sonner_1.toast.error("Merchant USDC account not found. Please ensure the merchant has created their USDC token account.");
-              _context.next = 30;
+              _context.next = 40;
               break;
-            case 28:
-              console.error("Error verifying merchant USDC ATA:", _context.t0);
-              throw new Error("Failed to verify merchant USDC ATA: ".concat(_context.t0 instanceof Error ? _context.t0.message : String(_context.t0)));
-            case 30:
-              _context.next = 37;
+            case 38:
+              console.error("Error verifying merchant USDC ATA:", _context.t1);
+              throw new Error("Failed to verify merchant USDC ATA: ".concat(_context.t1 instanceof Error ? _context.t1.message : String(_context.t1)));
+            case 40:
+              _context.next = 47;
               break;
-            case 32:
-              _context.prev = 32;
-              _context.t1 = _context["catch"](0);
-              console.error("Failed to initialize merchant wallet:", _context.t1);
+            case 42:
+              _context.prev = 42;
+              _context.t2 = _context["catch"](0);
+              console.error("Failed to initialize merchant wallet:", _context.t2);
               sonner_1.toast.error("Failed to initialize payment system. Please try again later.");
-              throw _context.t1;
-            case 37:
+              throw _context.t2;
+            case 47:
             case "end":
               return _context.stop();
           }
-        }, _callee, this, [[0, 32], [14, 21]]);
+        }, _callee, this, [[0, 42], [8, 13], [24, 31]]);
       }));
     }
     /**
