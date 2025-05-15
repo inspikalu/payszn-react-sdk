@@ -1,5 +1,5 @@
 import { RPC_URL, USDC_MINT_ADDRESS } from "./constants";
-import { Commitment, Connection, PublicKey, Transaction } from '@solana/web3.js';
+import { Connection, PublicKey, Transaction } from '@solana/web3.js';
 import {
     getAssociatedTokenAddress,
     getAccount,
@@ -7,8 +7,6 @@ import {
     TokenAccountNotFoundError,
     TokenInvalidAccountOwnerError,
     Account,
-    TOKEN_PROGRAM_ID,
-    ASSOCIATED_TOKEN_PROGRAM_ID
 } from '@solana/spl-token';
 
 /**

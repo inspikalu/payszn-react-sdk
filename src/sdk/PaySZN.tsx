@@ -205,6 +205,9 @@ class PaySZN {
                                 userTokenPriceUSDC
                         );
 
+                        const userUsdcATA = await TokenService.getUSDCATA(data.walletAddress);
+                        console.log("User's USDC ATA:", userUsdcATA);
+
                         // Get swap quote
                         toast.loading("Getting swap quote...", { id: mainToastId });
                         const quoteResult = await JupiterService.getSwapQuote(
